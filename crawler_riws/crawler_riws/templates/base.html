@@ -1,24 +1,48 @@
-<!doctype html>
+<!DOCTYPE html>
 <html>
-    <head>
-        <title>RIWS component hub</title>
-        <meta name="description" content="PC components search engine">
-        <meta name="keywords" content="component search retrieval data">
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <link rel="stylesheet" href="../static/style.css">
-    </head>
+  <head>
+    <title>RIWS Component Hub</title>
+    <meta name="description" content="PC components search engine" />
+    <meta name="keywords" content="component search retrieval data" />
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" href="../static/style.css" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              clifford: "#da373d",
+            },
+          },
+        },
+      };
+    </script>
+  </head>
 
-    <body>
-        <header>
-            <h1>Component search engine</h1>
-        </header>
-        
-        <div id="content-block">
-            {% block content %}
-                <p> Content not yet implemented. </p>
-            {% endblock content %}
+  <body>
+    <div class="w-full h-full flex flex-col bg-teal-200">
+      <div>
+        <h1 class="flex w-full text-4xl font-bold">Component search engine</h1>
+      </div>
+
+      <div id="content-block">
+        {% block content %}
+        <p>Content not yet implemented.</p>
+        {% endblock content %}
+      </div>
+
+      <!-- FOOTER DE LOS COJONES DEL JUAN -->
+      <footer>
+        <div class="bg-slate-200 border">
+          <div class="flex flex-col justify-items-center px-12 py-2">
+            <div class="text-md font-semibold">
+              Juan Justo Armesto agarrame de esto
+            </div>
+          </div>
         </div>
-
-    </body>
+      </footer>
+    </div>
+  </body>
 </html>
