@@ -1,0 +1,14 @@
+:root{
+    --primary: #0B0C10;
+    --text: white;
+}   
+
+html, body {
+    margin: 0;
+    height: 100%;
+}
+
+header {
+    color: var(--text);
+    background-color: var(--primary);
+}
