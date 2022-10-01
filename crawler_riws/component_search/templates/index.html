@@ -1,0 +1,14 @@
+{% extends 'home.html' %}
+
+{% block content %}
+
+    <form action='index.html' method='GET'>
+        <input type="text" name="search-input" placeholder="Enter search keys"/>
+        <button type="submit">Search</button>
+    </form>
+
+    {% if result %}
+        <p>{{ result }}</p>
+    {% endif %}
+
+{% endblock content %}
