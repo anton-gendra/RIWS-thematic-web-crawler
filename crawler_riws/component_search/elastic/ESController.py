@@ -1,8 +1,9 @@
 from typing import Any, Dict, Tuple
-from django.http import Http404
 from elasticsearch import Elasticsearch, BadRequestError
 import requests
 import os
+
+from crawler_riws.crawler_riws.settings import INDICES # Here we can access indices names
 
 # TODO: Remove
 # Hago este sólo de ejemplo, luego vemos cómo hacemos
@@ -13,12 +14,20 @@ idx = {
     },
     "mappings": {
         "properties": {
-            "name": {"type": "text"},
-            "price": {"type": "float"},
+            "name": {
+                "type": "text"
+            },
+            "price": {
+                "type": "float"
+            },
             "characteristics": {
                 "properties": {
-                    "RAM": {"type": "integer"},
-                    "height": {"type": "float"}
+                    "RAM": {
+                        "type": "integer"
+                    },
+                    "height": {
+                        "type": "float"
+                    }
                 }
             }
         }

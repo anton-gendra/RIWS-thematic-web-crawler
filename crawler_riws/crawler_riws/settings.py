@@ -31,6 +31,10 @@ DEBUG = True
 ALLOWED_HOSTS = ['*']
 
 
+INDICES = { # This is to have "easy" access for each index name
+    "component": "component_index",
+}
+
 # Application definition
 
 INSTALLED_APPS = [
