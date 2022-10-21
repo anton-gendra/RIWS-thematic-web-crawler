@@ -22,11 +22,26 @@ idx = {
             },
             "characteristics": {
                 "properties": {
-                    "RAM": {
+                    "storing_capacity": { # Gigabytes, RAM or persistent or w/e
                         "type": "integer"
                     },
                     "height": {
                         "type": "float"
+                    },
+                    "weight": {
+                        "type": "float"
+                    },
+                    "power": { # Watts of power
+                        "type": "integer"
+                    },
+                    "speed": {
+                        "type": "integer"
+                    },
+                    "latency": {
+                        "type": "integer"
+                    },
+                    "max_temperature": {
+                        "type": "integer"
                     }
                 }
             }
