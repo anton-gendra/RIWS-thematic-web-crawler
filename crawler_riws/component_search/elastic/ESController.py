@@ -1,6 +1,9 @@
 import requests
 import os
 
+from dotenv import load_dotenv
+load_dotenv()
+
 class ESController:
     base_url = "http://elastic:" + os.environ['ES_PASSWORD'] + "@localhost:9200/"
 
