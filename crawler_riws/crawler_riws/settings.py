@@ -34,7 +34,8 @@ DEBUG = True
 
 # Check ES status
 es = ESController()
-print(es.get_status())
+print("ESLASTICSEARCH configuration")
+print(f"ES current STATUS: {es.get_status()}")
 
 
 
