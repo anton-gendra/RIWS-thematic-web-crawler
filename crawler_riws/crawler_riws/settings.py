@@ -34,7 +34,7 @@ DEBUG = True
 
 # Check ES status
 es = ESController()
-es.get_status()
+print(es.get_status())
 
 
 
