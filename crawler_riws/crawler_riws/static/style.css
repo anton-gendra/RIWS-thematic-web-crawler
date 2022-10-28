@@ -12,3 +12,8 @@ header {
     color: var(--text);
     background-color: var(--primary);
 }
+
+#logo{
+    width: 13% !important;
+    height: 13% !important;
+}

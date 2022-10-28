@@ -8,12 +8,19 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link rel="stylesheet" href="../static/style.css" />
     <script src="https://cdn.tailwindcss.com"></script>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
+    />
     <script>
       tailwind.config = {
         theme: {
           extend: {
             colors: {
-              clifford: "#da373d",
+              dark: "#212121",
+              color: "#6D9886",
+              grey: "#D9CAB3",
+              light: "#F6F6F6",
             },
           },
         },
@@ -22,27 +29,38 @@
   </head>
 
   <body>
-    <div class="w-full h-full flex flex-col bg-teal-200">
-      <div>
-        <h1 class="flex w-full text-4xl font-bold">Component search engine</h1>
+    <div
+      class="w-full flex flex-row bg-color border-solid border-b-2 border-dark"
+    >
+      {% load static %}
+      <img
+        id="logo"
+        src="{% static 'assets/lapTOP_logo.png' %}"
+        alt="My image"
+        class="px-4"
+      />
+      <div class="flex justify-center w-full py-6 pl-44 pr-80">
+        <input
+          class="py-auto bg-transparent w-full border-b-light-500 border-b-2 pl-4 focus: borderb-2">
+          <i class="fa fa-search icon-size-10" aria-hidden="true"></i>
+        </input>
       </div>
+    </div>
 
-      <div id="content-block">
-        {% block content %}
-            <p>Content not yet implemented.</p>
-        {% endblock content %}
-      </div>
-
-      <!-- FOOTER DE LOS COJONES DEL JUAN -->
-      <footer>
-        <div class="bg-slate-200 border">
-          <div class="flex flex-col justify-items-center px-12 py-2">
-            <div class="text-md font-semibold">
-              Juan Justo Armesto agarrame de esto
-            </div>
-          </div>
-        </div>
-      </footer>
+    <div id="content-block" class="h-full w-full">
+      {% block content %}
+      <p>Content not yet implemented.</p>
+      {% endblock content %}
     </div>
   </body>
+  <!-- FOOTER DE LOS COJONES DEL JUAN -->
+  <footer class="fixed bottom-0 left-0 right-0">
+    <div class="bg-dark">
+      <div class="flex flex-col px-12 py-2">
+        <div class="flex justify-center text-light text-md font-semibold">
+          Juan Justo Armesto agarrame de esto &#169;
+        </div>
+      </div>
+    </div>
+  </footer>
 </html>

@@ -76,6 +76,9 @@ TEMPLATES = [
     },
 ]
 
+# Static files
+STATIC_URL = 'static/'
+
 WSGI_APPLICATION = 'crawler_riws.wsgi.application'
 
 
