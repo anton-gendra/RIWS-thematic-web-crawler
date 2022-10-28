@@ -20,12 +20,18 @@ idx = {
             "price": {
                 "type": "float"
             },
+            "brand": {
+                "type": "keyword"
+            },
             "characteristics": {
                 "properties": {
                     "storing_capacity": { # Gigabytes, RAM or persistent or w/e
                         "type": "integer"
                     },
                     "height": {
+                        "type": "float"
+                    },
+                    "width": {
                         "type": "float"
                     },
                     "weight": {
@@ -42,6 +48,27 @@ idx = {
                     },
                     "max_temperature": {
                         "type": "integer"
+                    },
+                    "year": {
+                        "type": "integer"
+                    },
+                    "generation": {
+                        "type": "integer"
+                    },
+                    "rating": {
+                        "type": "integer"
+                    },
+                    "socket": {
+                        "type": "keyword"
+                    },
+                    "interface": {
+                        "type": "keyword"
+                    },
+                    "category": {
+                        "type": "keyword"
+                    },
+                    "achitecture": {
+                        "type": "keyword"
                     }
                 }
             }
@@ -73,10 +100,54 @@ class ESController:
         result = requests.get(self.base_url + index_name)
         return (result.status_code, result.reason), result.content.decode('utf-8')
 
+    def get_component_by_name(self, name: str):
+        query = {
+            "match": {
+                "name": name
+            }
+        }
+        result = self.es.search(query=query, size=10, index=INDICES['component'], 
+            _source=["name", "price", "brand", "characteristics"])
+        return result
+
+    def insert_component(self, index_name: str, data: Dict[str, Any]):
+        result = self.es.index(index=index_name, document=data)
+        return result
 
 
 if __name__ == '__main__':
     elastic = ESController()
-    print(elastic.get_es_status())
-    print(elastic.create_index("test_index", idx))
-    print(elastic.get_index_status("test_index"))
+    print(f"Elasticsearch server status: {elastic.get_es_status()}")
+    # print(elastic.create_index("test_index", idx))
+    # print(elastic.get_index_status("test_index"))
+    # print(f"Creating new index '{INDICES['component']}': {elastic.create_index(INDICES['component'], idx)}")
+    print(f"Index status: {elastic.get_index_status(INDICES['component'])}")
+    component_1 = {
+        "name": "Cisco SSD 2349k",
+        "price": 3.14,
+        "brand": "Kingstone",
+        "characteristics": {
+            "storing_capacity": 5000
+        }
+    }
+    component_2 = {
+        "name": "Nicolas Motherboard 2349k",
+        "price": 89.67,
+        "brand": "Gigabyte",
+        "characteristics": {
+            "socket": "LG234"
+        }
+    }
+    component_3 = {
+        "name": "Arthur Processor 8300N",
+        "price": 149.43,
+        "brand": "Asus",
+        "characteristics": {
+            "socket": "LG234",
+            "speed": 1000
+        }
+    }
+    # print(f"Inserting component 1: {elastic.insert_component(INDICES['component'], component_1)}")
+    # print(f"Inserting component 2: {elastic.insert_component(INDICES['component'], component_2)}")
+    # print(f"Inserting component 3: {elastic.insert_component(INDICES['component'], component_3)}")
+    print(f"Searching 'SSD' term: {elastic.get_component_by_name('SSD')}")
