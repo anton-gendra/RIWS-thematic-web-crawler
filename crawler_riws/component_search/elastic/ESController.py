@@ -14,6 +14,9 @@ idx = {
     },
     "mappings": {
         "properties": {
+            "id": {
+                "type": "keyword"
+            },
             "name": {
                 "type": "text"
             },
@@ -22,6 +25,13 @@ idx = {
             },
             "brand": {
                 "type": "keyword"
+            },
+            "source": { # Page {Gigabyte, Fnac, whatever}
+                "type": "keyword"
+            },
+            "link": {
+                "url": "keyword",
+                "index": False
             },
             "characteristics": {
                 "properties": {
@@ -106,11 +116,22 @@ class ESController:
                 "name": name
             }
         }
+        source = ["id", "name", "price", "brand", "characteristics"]
         result = self.es.search(query=query, size=10, index=INDICES['component'], 
-            _source=["name", "price", "brand", "characteristics"])
+            _source=source)
         return result
 
     def insert_component(self, index_name: str, data: Dict[str, Any]):
+        data['id'] = f"{data['name']}-{data['source']}"
+        query = {
+            "match": {
+                "id": data['id']
+            }
+        }
+        exact_match = self.es.search(query=query, size=1, index=INDICES['component'], _source=['id'])
+        xd = exact_match['hits']['hits']
+        if exact_match['hits']['hits']: return {'status': 400, 'description': "Component already inserted"}
+
         result = self.es.index(index=index_name, document=data)
         return result
 
@@ -126,6 +147,7 @@ if __name__ == '__main__':
         "name": "Cisco SSD 2349k",
         "price": 3.14,
         "brand": "Kingstone",
+        "source": "Gigabyte",
         "characteristics": {
             "storing_capacity": 5000
         }
@@ -134,6 +156,7 @@ if __name__ == '__main__':
         "name": "Nicolas Motherboard 2349k",
         "price": 89.67,
         "brand": "Gigabyte",
+        "source": "Gigabyte",
         "characteristics": {
             "socket": "LG234"
         }
@@ -142,12 +165,13 @@ if __name__ == '__main__':
         "name": "Arthur Processor 8300N",
         "price": 149.43,
         "brand": "Asus",
+        "source": "Gigabyte",
         "characteristics": {
             "socket": "LG234",
             "speed": 1000
         }
     }
-    # print(f"Inserting component 1: {elastic.insert_component(INDICES['component'], component_1)}")
-    # print(f"Inserting component 2: {elastic.insert_component(INDICES['component'], component_2)}")
-    # print(f"Inserting component 3: {elastic.insert_component(INDICES['component'], component_3)}")
+    print(f"Inserting component 1: {elastic.insert_component(INDICES['component'], component_1)}")
+    print(f"Inserting component 2: {elastic.insert_component(INDICES['component'], component_2)}")
+    print(f"Inserting component 3: {elastic.insert_component(INDICES['component'], component_3)}")
     print(f"Searching 'SSD' term: {elastic.get_component_by_name('SSD')}")
