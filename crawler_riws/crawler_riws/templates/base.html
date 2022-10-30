@@ -40,10 +40,15 @@
         class="px-4"
       />
       <div class="flex justify-center w-full py-6 pl-44 pr-80">
-        <input
+        {% load tailwind_filters %}
+        <form method="post">
+          {% csrf_token %}
+              {{form|crispy}}
+              <input
           class="py-auto bg-transparent w-full border-b-light-500 border-b-2 pl-4 focus: borderb-2">
           <i class="fa fa-search icon-size-10" aria-hidden="true"></i>
         </input>
+          </form>
       </div>
     </div>
 
@@ -53,12 +58,12 @@
       {% endblock content %}
     </div>
   </body>
-  <!-- FOOTER DE LOS COJONES DEL JUAN -->
-  <footer class="fixed bottom-0 left-0 right-0">
+  <!-- FOOTER -->
+  <footer>
     <div class="bg-dark">
       <div class="flex flex-col px-12 py-2">
         <div class="flex justify-center text-light text-md font-semibold">
-          Juan Justo Armesto agarrame de esto &#169;
+          RIWS, UDC &#169;
         </div>
       </div>
     </div>
