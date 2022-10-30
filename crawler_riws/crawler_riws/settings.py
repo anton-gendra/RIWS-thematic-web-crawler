@@ -10,7 +10,6 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.1/ref/settings/
 """
 
-from component_search.elastic.ESController import ESController
 
 from pathlib import Path
 import os
@@ -29,14 +28,6 @@ SECRET_KEY = os.environ['SECRET_KEY']
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
-
-
-
-# Check ES status
-es = ESController()
-print("ESLASTICSEARCH configuration")
-print(f"ES current STATUS: {es.get_status()}")
-
 
 
 ALLOWED_HOSTS = ['*']

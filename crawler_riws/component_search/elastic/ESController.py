@@ -30,7 +30,7 @@ idx = {
                 "type": "keyword"
             },
             "link": {
-                "url": "keyword",
+                "type": "keyword",
                 "index": False
             },
             "characteristics": {
