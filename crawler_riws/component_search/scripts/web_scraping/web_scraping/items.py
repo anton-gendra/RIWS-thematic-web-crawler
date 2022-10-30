@@ -8,6 +8,7 @@ import scrapy
 
 class Component(scrapy.Item):
     name = scrapy.Field()
+    link = scrapy.Field()
     vendor = scrapy.Field()
     price = scrapy.Field()
     description = scrapy.Field()
