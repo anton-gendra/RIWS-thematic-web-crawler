@@ -42,6 +42,10 @@ print(f"ES current STATUS: {es.get_status()}")
 ALLOWED_HOSTS = ['*']
 
 
+INDICES = { # This is to have "easy" access for each index name
+    "component": "component_index",
+}
+
 # Application definition
 
 INSTALLED_APPS = [
