@@ -141,7 +141,7 @@ if __name__ == '__main__':
     print(f"Elasticsearch server status: {elastic.get_es_status()}")
     # print(elastic.create_index("test_index", idx))
     # print(elastic.get_index_status("test_index"))
-    # print(f"Creating new index '{INDICES['component']}': {elastic.create_index(INDICES['component'], idx)}")
+    print(f"Creating new index '{INDICES['component']}': {elastic.create_index(INDICES['component'], idx)}")
     print(f"Index status: {elastic.get_index_status(INDICES['component'])}")
     component_1 = {
         "name": "Cisco SSD 2349k",
