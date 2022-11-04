@@ -33,6 +33,9 @@ idx = {
                 "type": "keyword",
                 "index": False
             },
+            "category": {
+                        "type": "keyword"
+            },
             "characteristics": {
                 "properties": {
                     "storing_capacity": { # Gigabytes, RAM or persistent or w/e
@@ -72,9 +75,6 @@ idx = {
                         "type": "keyword"
                     },
                     "interface": {
-                        "type": "keyword"
-                    },
-                    "category": {
                         "type": "keyword"
                     },
                     "achitecture": {
@@ -135,6 +135,24 @@ class ESController:
         result = self.es.index(index=index_name, document=data)
         return result
 
+    def get_component_by_price(self, data: Dict[str, Any]):
+
+        query = {
+            "bool": {
+                "must": {
+                    "term" : {"category": data['category']}
+                },
+                "filter" : {
+                    "range": {
+                        "price" : {"gte": data['min'], "lte": data['max']}
+                    }
+                }
+            }
+        }
+        source = ["id", "name", "price", "brand", "characteristics"]
+        result = self.es.search(query=query, size=20, index=INDICES['component'], _source=source)
+        return result
+
 
 if __name__ == '__main__':
     elastic = ESController()
@@ -148,6 +166,7 @@ if __name__ == '__main__':
         "price": 3.14,
         "brand": "Kingstone",
         "source": "Gigabyte",
+        "category": "almacenamiento",
         "characteristics": {
             "storing_capacity": 5000
         }
@@ -157,6 +176,7 @@ if __name__ == '__main__':
         "price": 89.67,
         "brand": "Gigabyte",
         "source": "Gigabyte",
+        "category": "almacenamiento",
         "characteristics": {
             "socket": "LG234"
         }
@@ -166,12 +186,16 @@ if __name__ == '__main__':
         "price": 149.43,
         "brand": "Asus",
         "source": "Gigabyte",
+        "category": "almacenamineto",
         "characteristics": {
             "socket": "LG234",
             "speed": 1000
         }
     }
+
+    dq = {"category" : "almacenamiento", "min" : 5, "max": 100}
     print(f"Inserting component 1: {elastic.insert_component(INDICES['component'], component_1)}")
     print(f"Inserting component 2: {elastic.insert_component(INDICES['component'], component_2)}")
     print(f"Inserting component 3: {elastic.insert_component(INDICES['component'], component_3)}")
     print(f"Searching 'SSD' term: {elastic.get_component_by_name('SSD')}")
+    print(f"Searching 'SSD' term: {elastic.get_component_by_price(dq)}")
