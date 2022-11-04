@@ -17,11 +17,17 @@ class CoolmodSpider(CrawlSpider):
             'grabadoras-dvd-blu-ray',
             'ventiladores',
             'tarjetas-de-sonido'
-        ]), callback='parse_component'),
+        ]), callback='parse_list'),
     )
 
-    def parse_component(self, response):
+    def parse_component(self, response, component):
+        yield component
+
+    def parse_list(self, response):
         components = response.css("div.productflex")
         for component in components:
             name = component.css("div.d-table-cell img::attr(alt)").get()
-            yield Component(name=name)
+            link = component.css("div.productName a::attr(href)").get()
+            
+            arg = {'component': Component(name=name)}
+            yield response.follow(link, callback=self.parse_component, cb_kwargs=arg)
