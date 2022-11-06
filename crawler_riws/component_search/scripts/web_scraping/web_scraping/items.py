@@ -27,3 +27,4 @@ class Component(scrapy.Item):
     socket = scrapy.Field()
     interface = scrapy.Field()
     achitecture = scrapy.Field()
+    image = scrapy.Field()
