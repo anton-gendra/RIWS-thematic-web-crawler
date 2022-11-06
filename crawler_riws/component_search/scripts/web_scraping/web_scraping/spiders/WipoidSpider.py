@@ -24,11 +24,34 @@ class WipoidSpider(CrawlSpider):
             'grabadoras-dvd-blu-ray',
             'accesorios-caja',
             'cables-y-adaptadores'
-        ]), callback='parse_component'),
+        ]), callback='parse_list'),
     )
 
-    def parse_component(self, response):
+    def parse_component(self, response, component):
+        #print('RESPONSEEEEEEEEE:',response)
+        #print('COMPONENTTTTTTTT:',component)
+        #print(response.css("section.page-product-box p::text").getall())
+        #print('NAMEEEEEEE:', component["name"])
+        productLabels = response.css("div.prd-reference a::text").getall()
+        brand = productLabels[1] if (len(productLabels) == 2) else None
+        print('BRAND:', brand)
+        price = response.css("div.our_price_display span::text").get()
+        print('priceeeeeeee:',price)
+        specsList = response.css("section.page-product-box p::text").getall()
+        link = response.url
+        #print('sourceee:', link[8:].split('/')[0])
+        source = 'wipoid'
+        print('listaaaaa:', specsList)
+        yield component
+
+    def parse_list(self, response):
+        print('linkkkkkkkkkkkkkkk:',response.url)
+        category = response.css("h1.category-name::text").get().strip()
+        print('categoryyyyyy', category)
         components = response.css("div.item-inner")
         for component in components:
             name = component.css("a.product-name::text").get().strip()
-            yield Component(name=name)
+            link = component.css("div.item-title a::attr(href)").get()
+
+            arg = {'component': Component(name=name, category=category)}
+            yield response.follow(link, callback=self.parse_component, cb_kwargs=arg)
