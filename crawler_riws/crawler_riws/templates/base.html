@@ -29,30 +29,7 @@
   </head>
 
   <body>
-    <div
-      class="w-full flex flex-row bg-color border-solid border-b-2 border-dark"
-    >
-      {% load static %}
-      <img
-        id="logo"
-        src="{% static 'assets/lapTOP_logo.png' %}"
-        alt="My image"
-        class="px-4"
-      />
-      <div class="flex justify-center w-full py-6 pl-44 pr-80">
-        {% load tailwind_filters %}
-        <form method="post">
-          {% csrf_token %}
-              {{form|crispy}}
-              <input
-          class="py-auto bg-transparent w-full border-b-light-500 border-b-2 pl-4 focus: borderb-2">
-          <i class="fa fa-search icon-size-10" aria-hidden="true"></i>
-        </input>
-          </form>
-      </div>
-    </div>
-
-    <div id="content-block" class="h-full w-full">
+    <div id="content-block" class="h-fit w-full">
       {% block content %}
       <p>Content not yet implemented.</p>
       {% endblock content %}

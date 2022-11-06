@@ -17,3 +17,8 @@ header {
     width: 13% !important;
     height: 13% !important;
 }
+
+input::placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */
+    color: #F6F6F6 !important;
+    opacity: 1; /* Firefox */
+  }

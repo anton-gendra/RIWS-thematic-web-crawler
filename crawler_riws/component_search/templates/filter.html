@@ -1,0 +1,23 @@
+{% extends 'base.html' %} {% block content %}
+{% load static %}
+{% load crispy_forms_tags %}
+
+<div class="w-full flex flex-row bg-color border-solid border-b-2 border-dark">
+    <img
+    id="logo"
+    src="{% static 'assets/lapTOP_logo.png' %}"
+    alt="My image"
+    class="px-4"
+  />
+  <div class="flex w-full justify-center flex-row">
+    <form method="get" action="filter.html" class="flex flex-row gap-8">
+    {{form|crispy}}
+    <button type="submit", value="Submit" class="text-light bg-dark hover:bg-grey-300 py-2 px-4 rounded-xl my-auto">Apply filters</button> 
+    </form>
+  </div>
+</div>
+
+<div class="w-full h-full bg-grey">
+</div>
+
+{% endblock content %}
