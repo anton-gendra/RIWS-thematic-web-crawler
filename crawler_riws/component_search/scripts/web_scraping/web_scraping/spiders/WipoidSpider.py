@@ -45,13 +45,12 @@ class WipoidSpider(CrawlSpider):
         yield component
 
     def parse_list(self, response):
-        print('linkkkkkkkkkkkkkkk:',response.url)
         category = response.css("h1.category-name::text").get().strip()
-        print('categoryyyyyy', category)
         components = response.css("div.item-inner")
         for component in components:
             name = component.css("a.product-name::text").get().strip()
             link = component.css("div.item-title a::attr(href)").get()
+            image = component.css("img.replace-2x::attr(src)").get()
 
-            arg = {'component': Component(name=name, category=category)}
+            arg = {'component': Component(name=name, category=category, link=link, image=image)}
             yield response.follow(link, callback=self.parse_component, cb_kwargs=arg)
