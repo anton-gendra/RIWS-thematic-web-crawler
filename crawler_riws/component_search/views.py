@@ -12,7 +12,7 @@ def filter(request):
         form = FilterForm()
         context = {
             'form': form,
-            'result': request.GET['search_input']
+            'result': request.GET.get('search_input')
         }
     print(context)
     return render(request, 'filter.html', context)
