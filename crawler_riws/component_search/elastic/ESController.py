@@ -3,10 +3,9 @@ from elasticsearch import Elasticsearch, BadRequestError
 import requests
 import os
 
-from crawler_riws.crawler_riws.settings import INDICES # Here we can access indices names
+from crawler_riws.settings import INDICES # Here we can access indices names
 
-# TODO: Remove
-# Hago este sólo de ejemplo, luego vemos cómo hacemos
+
 idx = {
     "settings": {
         "number_of_shards": 1,
@@ -123,7 +122,7 @@ class ESController:
         source = ["id", "name", "price", "brand", "characteristics"]
         result = self.es.search(query=query, size=10, index=INDICES['component'], 
             _source=source)
-        return result
+        return [component['_source'] for component in result['hits']['hits']]
 
     def insert_component(self, index_name: str, data: Dict[str, Any]):
         data['id'] = f"{data['name']}-{data['source']}"
@@ -190,7 +189,18 @@ if __name__ == '__main__':
         "price": 149.43,
         "brand": "Asus",
         "source": "Gigabyte",
-        "category": "almacenamineto",
+        "category": "almacenamiento",
+        "characteristics": {
+            "socket": "LG234",
+            "speed": 1000
+        }
+    }
+    component_3 = {
+        "name": "Arthur SSD 1000TB",
+        "price": 149.43,
+        "brand": "Asus",
+        "source": "Gigabyte",
+        "category": "almacenamiento",
         "characteristics": {
             "socket": "LG234",
             "speed": 1000

@@ -18,6 +18,9 @@
 </div>
 
 <div class="w-full h-full bg-grey">
+  {% for component in components %}
+    <p>{{ component.name }}</p>
+  {% endfor %}
 </div>
 
 {% endblock content %}
