@@ -54,7 +54,7 @@ idx = {
                         "type": "integer"
                     },
                     "speed": {
-                        "type": "integer"
+                        "type": "float"
                     },
                     "latency": {
                         "type": "integer"
@@ -78,6 +78,12 @@ idx = {
                         "type": "keyword"
                     },
                     "achitecture": {
+                        "type": "keyword"
+                    },
+                    "cores": {
+                        "type": "keyword"
+                    },
+                    "threads": {
                         "type": "keyword"
                     }
                 }
@@ -129,7 +135,6 @@ class ESController:
             }
         }
         exact_match = self.es.search(query=query, size=1, index=INDICES['component'], _source=['id'])
-        xd = exact_match['hits']['hits']
         if exact_match['hits']['hits']: return {'status': 400, 'description': "Component already inserted"}
 
         result = self.es.index(index=index_name, document=data)

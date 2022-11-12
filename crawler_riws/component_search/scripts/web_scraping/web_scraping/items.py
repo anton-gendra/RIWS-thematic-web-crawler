@@ -7,6 +7,7 @@ import scrapy
 
 
 class Component(scrapy.Item):
+    id = scrapy.Field()
     name = scrapy.Field()
     brand = scrapy.Field()
     price = scrapy.Field()
@@ -26,4 +27,15 @@ class Component(scrapy.Item):
     rating = scrapy.Field()
     socket = scrapy.Field()
     interface = scrapy.Field()
-    achitecture = scrapy.Field()
+    architecture = scrapy.Field()
+    image = scrapy.Field()
+    cores = scrapy.Field()
+    threads = scrapy.Field()
+    type = scrapy.Field()
+    
+    def __getitem__(self, key):
+        try:
+            item = super().__getitem__(key)
+        except KeyError:
+            item = None
+        return item
