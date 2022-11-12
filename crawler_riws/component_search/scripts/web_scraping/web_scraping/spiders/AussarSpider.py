@@ -5,6 +5,19 @@ from scrapy.linkextractors import LinkExtractor
 
 from web_scraping.items import Component
 
+CATEGORIES = {
+    "Procesadores": "processor",
+    "Tarjetas Gráficas": "graphic-card",
+    "TARJETAS": "net-card",
+    "Sonido": "sound-card",
+    "Placas Base": "motherboard",
+    "Refrigeración": "fan",
+    "Memoria": "RAM",
+    "SSD": "SSD",
+    "DISCOS HDD": "HDD",
+    "FUENTES": "power-source",
+    "Cajas": "tower"
+}
 
 class AussarSpider(CrawlSpider):
     name = 'aussar-spider'
@@ -17,34 +30,36 @@ class AussarSpider(CrawlSpider):
             'placas-base',
             'memoria',
             'refrigeracion',
-            'almacenamiento',
-            'opticos',
+            'almacenamiento/ssd',
+            'almacenamiento/discos-hdd'
             'tarjetas-graficas',
-            'perifericos/lectores-de-tarjetas',
             'sonido',
             'cajas',
             'alimentacion/fuentes',
-            'alimentacion/sai',
-            'refrigeracion/ventiladores-caja-cpu',
-            'redes/tarjetas-de-red-y-wifi',
-            'sistemas-operativos'
+            'redes/tarjetas-de-red-y-wifi'
         ]), callback='parse_list'),
     )
 
     def parse_component(self, response, component):
+        component['source'] = 'aussar'
         price = response.css("span.current-price-value::attr(content)").get()
+        component['price'] = price
         brand = response.css("div.product-manufacturer a::text").get()
-        source = 'aussar'
+        component['brand'] = brand
+        
         yield component
 
     def parse_list(self, response):
         category = response.css("h1.category-name::text").get()
+        try:
+            category = CATEGORIES[category]
+            components = response.css("div.ajax_block_product")
+            for component in components:
+                name = component.css("h3.product-title a::text").get()
+                link = component.css("h3.product-title a::attr(href)").get()
+                image = component.css("img.img-fluid::attr(src)").get()
 
-        components = response.css("div.ajax_block_product")
-        for component in components:
-            name = component.css("h3.product-title a::text").get()
-            link = component.css("h3.product-title a::attr(href)").get()
-            image = component.css("img.img-fluid::attr(src)").get()
-
-            arg = {'component': Component(name=name, category=category, link=link, image=image)}
-            yield response.follow(link, callback=self.parse_component, cb_kwargs=arg)
+                arg = {'component': Component(name=name, category=category, link=link, image=image)}
+                yield response.follow(link, callback=self.parse_component, cb_kwargs=arg)
+        except KeyError:
+            pass
