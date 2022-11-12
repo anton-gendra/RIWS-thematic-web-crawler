@@ -5,6 +5,19 @@ from scrapy.linkextractors import LinkExtractor
 from web_scraping.items import Component
 
 
+CATEGORIES = {
+    "Procesadores": "processor",
+    "Tarjetas Gráficas": "graphic-card",
+    "tarjetas-de-sonido": "sound-card",
+    "Placas Base": "motherboard",
+    "Refrigeración CPU": "fan",
+    "Memoria RAM": "RAM",
+    "Discos Duros": "HDD",
+    "Fuentes Alimentación": "power-source",
+    "Torres/Cajas": "tower"
+}
+
+
 class WipoidSpider(CrawlSpider):
     name = 'wipoid-spider'
     allowed_domains = ['wipoid.com']
@@ -17,19 +30,16 @@ class WipoidSpider(CrawlSpider):
             'ventiladores',
             'tarjetas-graficas',
             'memoria-ram',
-            'refrigeracion-cpu',
+            'refrigeracion-cpu'
             'discos-duros',
             'fuentes-alimentacion',
-            'torres-cajas-carcasas',
-            'grabadoras-dvd-blu-ray',
-            'accesorios-caja',
-            'cables-y-adaptadores'
+            'torres-cajas-carcasas'
         ]), callback='parse_list'),
     )
 
     def parse_component(self, response, component):
         component['source'] = 'wipoid'
-        productLabels = response.css("div.prd-reference a::text").getall()
+        productLabels = response.css("div.prd-reference a::text")[-1].get()
         brand = productLabels[1] if (len(productLabels) == 2) else None
         component['brand'] = brand
         price = response.css("div.our_price_display span::text").get()
@@ -37,6 +47,7 @@ class WipoidSpider(CrawlSpider):
         specsList = response.css("section.page-product-box p::text").getall()
 
         specsListLen = len(specsList)
+        #print(specsList)
         for i,e in enumerate(specsList):
             #print('objetooooooooooooo', e)
             if ('gráfico' in e.lower()) or ('arquitectura' in e.lower()):
@@ -69,11 +80,19 @@ class WipoidSpider(CrawlSpider):
 
     def parse_list(self, response):
         category = response.css("h1.category-name::text").get().strip()
-        components = response.css("div.item-inner")
-        for component in components:
-            name = component.css("a.product-name::text").get().strip()
-            link = component.css("div.item-title a::attr(href)").get()
-            image = component.css("img.replace-2x::attr(src)").get()
+        try:
+            print(category, response.url)
+            category = CATEGORIES[category]
+            print('CATEGORYYYYYYYYYY', category, response.url)
+            components = response.css("div.item-inner")
+            for component in components:
+                name = component.css("a.product-name::text").get().strip()
+                if ('ssd' in name.lower()):
+                    category = 'SSD'
+                link = component.css("div.item-title a::attr(href)").get()
+                image = component.css("img.replace-2x::attr(src)").get()
 
-            arg = {'component': Component(name=name, category=category, link=link, image=image)}
-            yield response.follow(link, callback=self.parse_component, cb_kwargs=arg)
+                arg = {'component': Component(name=name, category=category, link=link, image=image)}
+                yield response.follow(link, callback=self.parse_component, cb_kwargs=arg)
+        except KeyError:
+            pass
