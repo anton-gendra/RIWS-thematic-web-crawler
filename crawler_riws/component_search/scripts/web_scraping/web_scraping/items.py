@@ -39,3 +39,4 @@ class Component(scrapy.Item):
         except KeyError:
             item = None
         return item
+

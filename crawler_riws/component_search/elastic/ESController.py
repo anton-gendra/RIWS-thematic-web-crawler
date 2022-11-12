@@ -36,6 +36,10 @@ idx = {
             "category": {
                         "type": "keyword"
             },
+            "image": {
+                "type": "keyword",
+                "index": False
+            },
             "characteristics": {
                 "properties": {
                     "storing_capacity": { # Gigabytes, RAM or persistent or w/e
