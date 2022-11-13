@@ -12,7 +12,11 @@ BRANDS = [
     'GOODRAM',
     'KINGSTON',
     'TEAMGROUP',
-    'THERMALTAKE'
+    'THERMALTAKE',
+    'MARS GAMING',
+    'NOX HUMMER',
+    'BE QUIET!',
+    'TP-LINK'
 ]
 
 def match_brand(compo_brand: str):
