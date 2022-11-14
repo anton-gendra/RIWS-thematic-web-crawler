@@ -3,6 +3,7 @@ from scrapy.spiders import CrawlSpider, Rule
 from scrapy.linkextractors import LinkExtractor
 
 from web_scraping.items import Component
+from crawler_riws.component_search.scripts.web_scraping.web_scraping.spiders.utils.utils import match_brand
 
 
 CATEGORIES = {
@@ -87,6 +88,18 @@ class CoolmodSpider(CrawlSpider):
         elif 'temp' in name.lower():
             component['max_temperature'] = value
 
+        elif 'núcle' in name.lower():
+            component['cores'] = value
+
+        elif 'hilo' in name.lower():
+            component['threads'] = value
+
+        elif 'caché' in name.lower():
+            component['storing_capacity'] = value
+
+        elif 'tipo de memoria' in name.lower() or 'tipo de dispositivo' in name.lower():
+            component['type'] = value
+
 
 
         return component
@@ -126,9 +139,11 @@ class CoolmodSpider(CrawlSpider):
         components = response.css("div.productflex")
         for component in components:
             name = component.css("div.d-table-cell img::attr(alt)").get()
+            brand = match_brand(name)
             image_src = component.css("div.d-table-cell img::attr(src)").get()
             link = component.css("div.productName a::attr(href)").get()
             price = component.css("span.pricecontent::text").get()
+            price = float(price.replace('.', '').replace(',', '.')) if price != ' ' and price else None
             try:
                 category = CATEGORIES[response.url.split('/')[3]]
             
@@ -138,5 +153,5 @@ class CoolmodSpider(CrawlSpider):
             if "ssd" in name.lower():
                 category = 'SSD'
 
-            arg = {'component': Component(name=name, category=category, image=image_src, price=price)}
+            arg = {'component': Component(name=name, category=category, image=image_src, price=price, brand=brand, source='Coolmod')}
             yield response.follow(link, callback=self.parse_component, cb_kwargs=arg)
