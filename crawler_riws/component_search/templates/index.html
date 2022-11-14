@@ -1,58 +1,62 @@
-{% extends 'base.html' %}
-{% load static %}
-{% block content %}
-<div class="w-full flex flex-row bg-color border-solid border-b-2 border-dark">
-  
-  <img
-    id="logo"
-    src="{% static 'assets/lapTOP_logo.png' %}"
-    alt="My image"
-    class="px-4"
-  />
-  <div
-    class="flex justify-center content-center place-content-center w-full pl-44 pr-80"
-  >
-    <form class="w-full pt-5" action="filter.html" method="get">
-      <div class="relative w-full">
-        <div
-          class="flex absolute inset-y-0 left-0 items-center pr-2 pointer-events-none"
-        >
-          <svg
-            aria-hidden="true"
-            class="w-6 h-6 text-light"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-            xmlns="http://www.w3.org/2000/svg"
+{% extends 'base.html' %} {% load static %} {% block content %}
+<div class="bg-grey">
+  <div class="w-full flex flex-row bg-color shadow-md shadow-dark mb-2">
+    <a id="logo" href="index.html">
+      <img
+        src="{% static 'assets/lapTOP_logo.png' %}"
+        alt="My image"
+        class="h-full"
+      />
+    </a>
+    <div class="flex w-full justify-center flex-row">
+      <form class="w-3/5 pt-5" action="filter.html" method="get">
+        <div class="relative w-full">
+          <div
+            class="flex absolute inset-y-0 left-0 items-center pr-2 pointer-events-none"
           >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-            ></path>
-          </svg>
+            <svg
+              aria-hidden="true"
+              class="w-6 h-6 text-light"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+              ></path>
+            </svg>
+          </div>
+          <input
+            name="name"
+            class="text-light focus:outline-0 bg-transparent placeholder:font-semibold p-2 pb-1 pl-10 w-full text-lg border-b-2 border-light"
+            placeholder="Search a product by name"
+          />
         </div>
-        <input name="search_input"
-          class="text-light focus:outline-0 bg-transparent p-2 pb-1 pl-10 w-full text-lg border-b-2 border-light"
-          placeholder="Search a product"
-          required
-        />
-      </div>
-    </form>
-  </div>
-</div>
-<div class="w-full h-full bg-grey overflow-visible">
-  <div class="grid grid-cols-3 px-16 py-5 gap-10 h-full">
-    {% for category in components_categories %}
-    <div
-      class="flex rounded-xl h-fit bg-light hover:bg-gray-200 shadow justify-center content-self-center cursor-pointer"
-    >
-      <div class="text-dark my-auto p-10 py-14 font-bold text-xl">
-        {{ category }}
-      </div>
+      </form>
     </div>
-    {% endfor %}
+  </div>
+  <div class="w-full h-full bg-grey overflow-visible">
+    <form
+      class="grid grid-cols-3 px-16 py-5 gap-10 h-full"
+      action="filter.html"
+      method="get"
+    >
+      {% for category in components_categories %}
+      <button
+        class="flex rounded-xl h-fit bg-light hover:bg-gray-200 justify-center content-self-center cursor-pointer shadow-md shadow-dark"
+        name="category"
+        value="{{ category }}"
+      >
+        <div class="text-dark my-auto p-10 py-14 font-bold text-2xl">
+          {{ category }}
+        </div>
+      </button>
+      {% endfor %}
+    </form>
   </div>
 </div>
 {% endblock content %}

@@ -1,24 +1,29 @@
 from django.shortcuts import render
 from .forms import FilterForm
 from component_search.elastic.ESController import ESController
+from crawler_riws.settings import COMPONENT_CAREGORIES
 
 def search(request):
-    components_categories = ['Graphics-Card', 'Laptop', 'Monitor', 'Desktops', 'PC-Peripherals', 'Keyboard', 'Mouse', 'Headset', 'PC-Components', 'PC-Case', 'Power-Supply', 'CPU-Cooler', 'SSD', 'Memory', 'DIY-KIT']
-    context = {"components_categories": components_categories}
+    context = {"components_categories": COMPONENT_CAREGORIES}
 
     return render(request, 'index.html', context)
 
 def filter(request):
     es = ESController()
 
+    name = None
+    category = None
+
     if request.GET:
-        search_key = request.GET.get('search_input')
+        name = request.GET.get('name')
+        category = request.GET.get('category')
 
     components = es.get_component_by_name('SSD') # SSD es solo de prueba borra esto
     form = FilterForm()
     context = {
+        'components_categories': COMPONENT_CAREGORIES,
         'form': form,
-        'result': search_key,
+        'result': name,
         'components': components
     }
 

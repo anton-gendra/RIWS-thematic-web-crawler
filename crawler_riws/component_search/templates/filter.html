@@ -1,26 +1,70 @@
-{% extends 'base.html' %} {% block content %}
-{% load static %}
-{% load crispy_forms_tags %}
+{% extends 'base.html' %} {% block content %} {% load static %}
 
-<div class="w-full flex flex-row bg-color border-solid border-b-2 border-dark">
-    <img
-    id="logo"
-    src="{% static 'assets/lapTOP_logo.png' %}"
-    alt="My image"
-    class="px-4"
-  />
-  <div class="flex w-full justify-center flex-row">
-    <form method="get" action="filter.html" class="flex flex-row gap-8">
-    {{form|crispy}}
-    <button type="submit", value="Submit" class="text-light bg-dark hover:bg-grey-300 py-2 px-4 rounded-xl my-auto">Apply filters</button> 
-    </form>
+<form method="get" action="filter.html">
+  <div class="bg-grey">
+    <div class="w-full flex flex-row bg-color shadow-md shadow-dark mb-2">
+      <a id="logo" href="index.html">
+        <img
+          src="{% static 'assets/lapTOP_logo.png' %}"
+          alt="My image"
+          class="h-full"
+        />
+      </a>
+      <div class="flex w-full justify-center flex-row">
+        <div class="flex items-center pr-2 gap-8">
+          <input
+            name="name"
+            class="text-light focus:outline-0 bg-transparent placeholder:font-semibold p-2 pb-1 w-full text-lg border-b-2 border-light"
+            placeholder="Name"
+          />
+          <input
+            name="min_price"
+            type="number"
+            min="0"
+            class="text-light focus:outline-0 bg-transparent placeholder:font-semibold p-2 pb-1 w-full text-lg border-b-2 border-light"
+            placeholder="Min. Price"
+          />
+          <input
+            name="max_price"
+            type="number"
+            min="1"
+            class="text-light focus:outline-0 bg-transparent placeholder:font-semibold p-2 pb-1 w-full text-lg border-b-2 border-light"
+            placeholder="Max. Price"
+          />
+          <select
+            name="category"
+            class="text-light focus:outline-0 bg-transparent placeholder:font-semibold p-2 pb-1 w-full text-lg border-b-2 border-light"
+          >
+          <option class="text-dark" value="All">All</option>
+          {% comment %} <option value="components_categories.0">{{components_categories.0}}</option> {% endcomment %}
+            {% for category in components_categories %}
+            <option class="text-dark" value="{{category}}">{{category}}</option>
+            {%endfor%}
+          </select>
+        </div>
+        <button
+          type="submit"
+          ,
+          value="Submit"
+          class="text-light bg-dark hover:bg-grey-300 py-2 px-4 rounded-xl my-auto"
+        >
+          Apply filters
+        </button>
+      </div>
+    </div>
+
+    {% if components|length > 0 %}
+    <div class="w-full h-full bg-grey">
+      {% for component in components %}
+      <p>{{ component.name }}</p>
+      {% endfor %}
+    </div>
+    {% else %}
+    <div class="w-full h-full bg-grey">
+      No components found for these search parameters
+    </div>
+    {% endif %}
   </div>
-</div>
-
-<div class="w-full h-full bg-grey">
-  {% for component in components %}
-    <p>{{ component.name }}</p>
-  {% endfor %}
-</div>
+</form>
 
 {% endblock content %}
