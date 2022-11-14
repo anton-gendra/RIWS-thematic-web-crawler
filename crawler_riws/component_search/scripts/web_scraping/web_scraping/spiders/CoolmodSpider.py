@@ -88,6 +88,18 @@ class CoolmodSpider(CrawlSpider):
         elif 'temp' in name.lower():
             component['max_temperature'] = value
 
+        elif 'núcle' in name.lower():
+            component['cores'] = value
+
+        elif 'hilo' in name.lower():
+            component['threads'] = value
+
+        elif 'caché' in name.lower():
+            component['storing_capacity'] = value
+
+        elif 'tipo de memoria' in name.lower() or 'tipo de dispositivo' in name.lower():
+            component['type'] = value
+
 
 
         return component
