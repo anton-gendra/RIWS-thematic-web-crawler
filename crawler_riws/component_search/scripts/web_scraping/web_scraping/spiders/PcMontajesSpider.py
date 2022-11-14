@@ -80,6 +80,12 @@ class PcMontajesSpider(CrawlSpider):
             elif ((cells[0].root.text == 'Interfaz') or (cells[0].root.text == 'Tipo de interfaz')):
                 component['interface'] = cells[1].root.text
 
+            elif ((cells[0].root.text == 'Número de núcleos de procesador')):
+                component['cores'] = cells[1].root.text
+
+            elif ((cells[0].root.text == 'Número de hilos de ejecución')):
+                component['threads'] = cells[1].root.text
+
         yield component
 
     def parse_list(self, response):
