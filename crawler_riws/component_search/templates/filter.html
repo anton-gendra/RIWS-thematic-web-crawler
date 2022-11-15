@@ -14,11 +14,17 @@
         <div class="flex items-center pr-2 gap-8">
           <input
             name="name"
+            {% if name %}
+            value={{ name }}
+            {% endif %}
             class="text-light focus:outline-0 bg-transparent p-2 pb-1 w-full text-xl border-b-2 border-light"
             placeholder="Name"
           />
           <input
             name="min_price"
+            {% if min_price %}
+            value={{ min_price }}
+            {% endif %}
             type="number"
             min="0"
             class="text-light focus:outline-0 bg-transparent p-2 pb-1 w-full text-xl border-b-2 border-light"
@@ -26,6 +32,9 @@
           />
           <input
             name="max_price"
+            {% if max_price %}
+            value={{ max_price }}
+            {% endif %}
             type="number"
             min="1"
             class="text-light focus:outline-0 bg-transparent p-2 pb-1 w-full text-xl border-b-2 border-light"
@@ -36,8 +45,10 @@
             class="text-light focus:outline-0 bg-transparent p-2 pb-1 w-full text-xl border-b-2 border-light"
           >
             <option class="text-dark" value="All">All categories</option>
-            {% for category in components_categories %}
-            <option class="text-dark" value="{{category}}">{{category}}</option>
+            {% for component_category in components_categories %}
+            <option class="text-dark" value="{{component_category}}"
+            {% if component_category == category %} selected {% endif %}>
+              {{component_category}}</option>
             {%endfor%}
           </select>
           <select
@@ -45,8 +56,10 @@
             class="text-light focus:outline-0 bg-transparent p-2 pb-1 w-full text-xl border-b-2 border-light"
           >
             <option class="text-dark" value="All">All brands</option>
-            {% for brand in brands %}
-            <option class="text-dark" value="{{brand}}">{{brand}}</option>
+            {% for component_brand in brands %}
+            <option class="text-dark" value="{{component_brand}}"
+            {% if component_brand == brand %} selected {% endif %}>
+              {{component_brand}}</option>
             {%endfor%}
           </select>
         </div>
@@ -96,7 +109,7 @@
       </div>
     </div>
     {% else %}
-    <div class="w-full h-full bg-grey">
+    <div class="w-full h-full bg-grey flex justify-center pt-20 text-3xl font-bold">
       No components found for these search parameters
     </div>
     {% endif %}
