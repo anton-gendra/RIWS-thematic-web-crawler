@@ -37,6 +37,17 @@ class AussarSpider(CrawlSpider):
             'cajas',
             'alimentacion/fuentes',
             'redes/tarjetas-de-red-y-wifi'
+        ], 
+        deny=[
+            'intel',
+            'amd',
+            'AMD',
+            'ddr4',
+            'ddr5',
+            'nvidia',
+            'profesionales',
+            'liquida',
+            'aire'
         ]), callback='parse_list'),
     )
 
@@ -47,6 +58,8 @@ class AussarSpider(CrawlSpider):
         brand = response.css("div.product-manufacturer a::text").get()
         component['brand'] = brand
         
+        specsList = response.css("div.product-description p::text").get()
+
         yield component
 
     def parse_list(self, response):
