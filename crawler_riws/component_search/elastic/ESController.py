@@ -125,7 +125,7 @@ class ESController:
                 "name": name
             }
         }
-        source = ["id", "name", "price", "brand", "characteristics"]
+        source = ["id", "name", "price", "brand", "characteristics", "image"]
         result = self.es.search(query=query, size=10, index=INDICES['component'], 
             _source=source)
         return [component['_source'] for component in result['hits']['hits']]
@@ -157,7 +157,7 @@ class ESController:
                 }
             }
         }
-        source = ["id", "name", "price", "brand", "characteristics"]
+        source = ["id", "name", "price", "brand", "characteristics", "image"]
         result = self.es.search(query=query, size=20, index=INDICES['component'], _source=source)
         return result
 
@@ -173,8 +173,9 @@ if __name__ == '__main__':
         "name": "Cisco SSD 2349k",
         "price": 3.14,
         "brand": "Kingstone",
-        "source": "Gigabyte",
+        "source": "CoolMod",
         "category": "almacenamiento",
+        "image": "https://static.gigabyte.com/StaticFile/Image/Global/eb3caf544215f0272a422656ae1ddd5e/Product/32494/webp/400",
         "characteristics": {
             "storing_capacity": 5000
         }

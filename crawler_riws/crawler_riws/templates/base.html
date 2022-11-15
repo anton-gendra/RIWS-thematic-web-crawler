@@ -18,9 +18,22 @@
           extend: {
             colors: {
               dark: "#212121",
-              color: "#6D9886",
-              grey: "#D9CAB3",
-              light: "#F6F6F6",
+              color: "#497174",
+              accent: "#EB6440",
+              grey: "#D6E4E5",
+              light: "#EFF5F5",
+              white: "#ffffff",
+              gray: {
+                100: "#f3f4f6",
+                200: "#e5e7eb",
+                300: "#d1d5db",
+                400: "#9ca3af",
+                500: "#6b7280",
+                600: "#4b5563",
+                700: "#374151",
+                800: "#1f2937",
+                900: "#111827",
+              },
             },
           },
         },
@@ -29,20 +42,20 @@
   </head>
 
   <body>
-    <div id="content-block" class="h-fit w-full">
+    <div id="content-block" class="h-full w-full bg-grey">
       {% block content %}
       <p>Content not yet implemented.</p>
       {% endblock content %}
+      <!-- FOOTER -->
+      <footer class="absolute inset-x-0 bottom-0">
+        <div class="bg-dark h-14">
+          <div class="flex flex-col px-12 py-2">
+            <div class="flex justify-center text-light text-xl font-semibold">
+              RIWS, UDC &#169;
+            </div>
+          </div>
+        </div>
+      </footer>
     </div>
   </body>
-  <!-- FOOTER -->
-  <footer>
-    <div class="bg-dark">
-      <div class="flex flex-col px-12 py-2">
-        <div class="flex justify-center text-light text-md font-semibold">
-          RIWS, UDC &#169;
-        </div>
-      </div>
-    </div>
-  </footer>
 </html>

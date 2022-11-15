@@ -2,6 +2,7 @@ from django.shortcuts import render
 from .forms import FilterForm
 from component_search.elastic.ESController import ESController
 from crawler_riws.settings import COMPONENT_CAREGORIES
+from component_search.scripts.web_scraping.web_scraping.spiders.utils.utils import BRANDS
 
 def search(request):
     context = {"components_categories": COMPONENT_CAREGORIES}
@@ -22,8 +23,8 @@ def filter(request):
     form = FilterForm()
     context = {
         'components_categories': COMPONENT_CAREGORIES,
-        'form': form,
-        'result': name,
+        'brands': BRANDS,
+        'params': name,
         'components': components
     }
 

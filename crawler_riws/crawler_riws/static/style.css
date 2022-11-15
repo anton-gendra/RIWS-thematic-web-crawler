@@ -14,9 +14,9 @@ header {
 }
 
 #logo{
-    height: 5.5rem !important;
-    margin-left: 1rem !important;
-    margin-right: 1rem !important;
+    height: 6.5rem !important;
+    margin-left: 1.5rem !important;
+    margin-right: 1.5rem !important;
 }
 
 input::placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */
