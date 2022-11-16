@@ -116,4 +116,21 @@
   </div>
 </form>
 
+
+
+<script>
+
+const updateClick(url, componentId) = async () => {
+  const response = await fetch(url, {
+    method: 'POST',
+    body: myBody, // string or object
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  });
+  const responseBody = await response.json();
+}
+
+</script>
+
 {% endblock content %}
