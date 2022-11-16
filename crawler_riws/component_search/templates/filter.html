@@ -73,13 +73,14 @@
       </div>
     </div>
 
-    {% if components|length > 0 %}
+    {% if components %}
     <div class="w-full h-fit bg-grey px-20 gap-8">
       <div class="grid grid-cols-4 px-16 py-8 gap-10 h-full">
         {% for component in components %}
         <a
           class="flex flex-col rounded-xl h-fit bg-light hover:bg-gray-200 justify-center content-self-center cursor-pointer shadow-md shadow-dark p-6"
           href="{{component.link}}"
+          onclick="updateClick('{% url 'update_click' %}', '{{ component.id }}')"
         >
           <div class="py-6 max-h-60 h-60">
             {% if component.image %}
@@ -120,10 +121,10 @@
 
 <script>
 
-const updateClick(url, componentId) = async () => {
+const updateClick = async (url, componentId) => {
   const response = await fetch(url, {
     method: 'POST',
-    body: myBody, // string or object
+    body: componentId,
     headers: {
       'Content-Type': 'application/json'
     }

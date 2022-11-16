@@ -51,7 +51,7 @@ def filter(request):
 
 @csrf_exempt
 def update_component_clicks(request):
-    component_id = json.loads(request.body.decode('utf-8')).get('component_id')
+    component_id = request.body.decode('utf-8')
 
     if not component_id:
         return HttpResponse({'detail': 'Component id not supplied'}, content_type='application/json')
