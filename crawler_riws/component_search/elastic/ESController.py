@@ -34,7 +34,7 @@ idx = {
                 "index": False
             },
             "category": {
-                        "type": "keyword"
+                "type": "keyword"
             },
             "image": {
                 "type": "keyword",
@@ -88,6 +88,9 @@ idx = {
                         "type": "keyword"
                     },
                     "threads": {
+                        "type": "keyword"
+                    },
+                    "type": {
                         "type": "keyword"
                     }
                 }
