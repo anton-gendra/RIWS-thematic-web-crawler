@@ -34,7 +34,7 @@ CARACT_TYPE = [
     "caract_values": ["socket", "chip", "chips", "sockets"]
     },
     {"name": "power",
-    "caract_values": ["tdp:", "potencia", "total output", "fuente de alimentación"]
+    "caract_values": ["tdp:", "potencia", "total output", "fuente de alimentación", "voltaje de memoria"]
     },
     {"name": "latency",
     "caract_values": [ "latencia"]
@@ -82,13 +82,13 @@ class PcBoxSpider(CrawlSpider):
     rules = (
         Rule(LinkExtractor(allow=[
             'componentes-de-ordenador',
-            #'componentes-de-ordenador/procesadores',
-            #'componentes-de-ordenador/discos-duros',
+            'componentes-de-ordenador/procesadores',
+            'componentes-de-ordenador/discos-duros',
             'componentes-de-ordenador/cajas-de-pc',
-            #'componentes-de-ordenador/fuentes-de-alimentacion',
-            #'componentes-de-ordenador/memoria-ram',
-            #'componentes-de-ordenador/placas-base',
-            #'componentes-de-ordenador/ventiladores-ordenador',
+            'componentes-de-ordenador/fuentes-de-alimentacion',
+            'componentes-de-ordenador/memoria-ram',
+            'componentes-de-ordenador/placas-base',
+            'componentes-de-ordenador/ventiladores-ordenador',
             'componentes-de-ordenador/tarjetas-graficas',
             'componentes-de-ordenador/tarjetas-de-sonido'
         ]), callback='parse_list', follow=True),
