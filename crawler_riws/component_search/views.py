@@ -35,6 +35,17 @@ def filter(request):
 
     components = es.get_component_by_name(name if name else '')
 
+    for component in components:
+        try:
+            clicks = Click.objects.get(component=component['id']).clicks
+
+        except ObjectDoesNotExist:
+            clicks = 0
+
+        component['clicks'] = clicks
+
+    components.sort(key=lambda component: component['clicks'], reverse=True)
+
     context = {
         'components_categories': COMPONENT_CAREGORIES,
         'brands': BRANDS,
