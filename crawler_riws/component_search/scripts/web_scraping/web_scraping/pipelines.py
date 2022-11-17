@@ -37,6 +37,7 @@ class WebScrapingPipeline(object):
             "price": item["price"],
             "brand": item["brand"],
             "source": item["source"],
+            "image": item["image"],
             "link": item["link"],
             "category": item["category"],
             "characteristics": {
