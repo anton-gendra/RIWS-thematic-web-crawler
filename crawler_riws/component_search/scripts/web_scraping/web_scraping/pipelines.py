@@ -56,6 +56,7 @@ class WebScrapingPipeline(object):
                 "achitecture": item["achitecture"],
                 "cores": item["cores"],
                 "threads": item["threads"],
+                "type": item["type"]
             }
         }
         

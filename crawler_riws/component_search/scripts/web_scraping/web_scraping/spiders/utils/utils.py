@@ -53,7 +53,8 @@ BRANDS = [
     'DELOCK',
     'EWENT',
     'KEEP OUT',
-    'STARTECH.COM'
+    'STARTECH.COM',
+    'TACENS ANIMA'
 ]
 
 def match_brand(compo_brand: str):
