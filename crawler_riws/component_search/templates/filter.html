@@ -1,6 +1,6 @@
 {% extends 'base.html' %} {% block content %} {% load static %}
 
-<form class="flex-grow h-screen" method="get" action="filter.html">
+<form class="flex-grow" method="get" action="filter.html">
   <div class="bg-grey">
     <div class="w-full flex flex-row bg-color shadow-md shadow-dark mb-2">
       <a id="logo" class="my-auto" href="index.html">
@@ -11,66 +11,183 @@
         />
       </a>
       <div class="flex w-full justify-center flex-row">
-        <div class="flex items-center pr-2 gap-8">
-          <input
-            name="name"
-            {% if name %}
-            value={{ name }}
-            {% endif %}
-            class="text-light focus:outline-0 bg-transparent p-2 pb-1 w-full text-xl border-b-2 border-light"
-            placeholder="Name"
-          />
-          <input
-            name="min_price"
-            {% if min_price %}
-            value={{ min_price }}
-            {% endif %}
-            type="number"
-            min="0"
-            class="text-light focus:outline-0 bg-transparent p-2 pb-1 w-full text-xl border-b-2 border-light"
-            placeholder="Min. Price"
-          />
-          <input
-            name="max_price"
-            {% if max_price %}
-            value={{ max_price }}
-            {% endif %}
-            type="number"
-            min="1"
-            class="text-light focus:outline-0 bg-transparent p-2 pb-1 w-full text-xl border-b-2 border-light"
-            placeholder="Max. Price"
-          />
-          <select
-            name="category"
-            class="text-light focus:outline-0 bg-transparent p-2 pb-1 w-full text-xl border-b-2 border-light"
-          >
-            <option class="text-dark" value="All">All categories</option>
-            {% for component_category in components_categories %}
-            <option class="text-dark" value="{{component_category}}"
-            {% if component_category == category %} selected {% endif %}>
-              {{component_category}}</option>
-            {%endfor%}
-          </select>
+        <div class="flex flex-col my-auto">
+          <div class="flex items-center pr-2 gap-8 my-3">
+            <input
+              name="name"
+              {% if name %}
+              value={{ name }}
+              {% endif %}
+              class="text-light focus:outline-0 bg-transparent p-2 pb-1 w-full text-xl border-b-2 border-light"
+              placeholder="Name"
+            />
+            <input
+              name="min_price"
+              {% if min_price %}
+              value={{ min_price }}
+              {% endif %}
+              type="number"
+              step="any"
+              min="0"
+              class="text-light focus:outline-0 bg-transparent p-2 pb-1 w-full text-xl border-b-2 border-light"
+              placeholder="Min. Price"
+            />
+            <input
+              name="max_price"
+              {% if max_price %}
+              value={{ max_price }}
+              {% endif %}
+              type="number"
+              step="any"
+              min="1"
+              class="text-light focus:outline-0 bg-transparent p-2 pb-1 w-full text-xl border-b-2 border-light"
+              placeholder="Max. Price"
+            />
+            <select
+              name="category"
+              class="text-light focus:outline-0 bg-transparent p-2 pb-1 w-full text-xl border-b-2 border-light"
+            >
+              <option class="text-dark" value="All">All categories</option>
+              {% for component_category in components_categories %}
+              <option class="text-dark" value="{{component_category}}"
+              {% if component_category == category %} selected {% endif %}>
+                {{component_category}}</option>
+              {%endfor%}
+            </select>
+          </div>
+          <div id="second_filter" class="hidden-filter flex items-center pr-2 gap-8 my-3">
+            <input
+              name="socket"
+              {% if socket %}
+              value={{ socket }}
+              {% endif %}
+              class="text-light focus:outline-0 bg-transparent p-2 pb-1 w-full text-xl border-b-2 border-light"
+              placeholder="Socket"
+            />
+            <input
+              name="storing_capacity"
+              {% if storing_capacity %}
+              value={{ storing_capacity }}
+              {% endif %}
+              type="number"
+              step="any"
+              min="0"
+              class="text-light focus:outline-0 bg-transparent p-2 pb-1 w-full text-xl border-b-2 border-light"
+              placeholder="Storing Capacity"
+            />
+            <input
+              name="power"
+              {% if power %}
+              value={{ power }}
+              {% endif %}
+              type="number"
+              step="any"
+              min="0"
+              class="text-light focus:outline-0 bg-transparent p-2 pb-1 w-full text-xl border-b-2 border-light"
+              placeholder="Power"
+            />
+            <input
+              name="max_temperature"
+              {% if max_temperature %}
+              value={{ max_temperature }}
+              {% endif %}
+              type="number"
+              step="any"
+              min="0"
+              class="text-light focus:outline-0 bg-transparent p-2 pb-1 w-full text-xl border-b-2 border-light"
+              placeholder="Max. Temperature"
+            />
+          </div>
+          <div id="third_filter" class="hidden-filter flex items-center pr-2 gap-8 my-3">
+            <input
+              name="speed"
+              {% if speed %}
+              value={{ speed }}
+              {% endif %}
+              type="number"
+              step="any"
+              min="0"
+              class="text-light focus:outline-0 bg-transparent p-2 pb-1 w-full text-xl border-b-2 border-light"
+              placeholder="Speed"
+            />
+            <input
+              name="weight"
+              {% if weight %}
+              value={{ weight }}
+              {% endif %}
+              type="number"
+              step="any"
+              min="0"
+              class="text-light focus:outline-0 bg-transparent p-2 pb-1 w-full text-xl border-b-2 border-light"
+              placeholder="Weight"
+            />
+            <input
+              name="height"
+              {% if height %}
+              value={{ height }}
+              {% endif %}
+              type="number"
+              step="any"
+              min="0"
+              class="text-light focus:outline-0 bg-transparent p-2 pb-1 w-full text-xl border-b-2 border-light"
+              placeholder="Height"
+            />
+            <input
+              name="width"
+              {% if width %}
+              value={{ width }}
+              {% endif %}
+              type="number"
+              step="any"
+              min="0"
+              class="text-light focus:outline-0 bg-transparent p-2 pb-1 w-full text-xl border-b-2 border-light"
+              placeholder="Width"
+            />
+          </div>
+        </div>
+        <div class="flex items-center pr-2 ml-8 gap-8 h-full">
           <select
             name="brand"
             multiple="multiple"
-            class="text-light focus:outline-0 bg-transparent p-2 my-3 h-4/6 pb-1 w-full text-xl border-b-2 border-light"
+            class="text-light focus:outline-0 bg-transparent p-2 my-3 h-5/6 pb-1 w-full text-xl border-b-2 border-light"
           >
-            <option value="All">All brands</option>
+            <option value=''>All brands</option>
             {% for component_brand in brands %}
             <option value="{{component_brand}}"
             {% if component_brand == brand %} selected {% endif %}>
               {{component_brand}}</option>
             {%endfor%}
           </select>
+          <select
+            name="source"
+            multiple="multiple"
+            class="text-light focus:outline-0 bg-transparent p-2 my-3 h-5/6 pb-1 w-full text-xl border-b-2 border-light"
+          >
+            <option value=''>All sources</option>
+            {% for component_source in component_sources %}
+            <option value="{{component_source}}"
+            {% if component_source == source %} selected {% endif %}>
+              {{component_source}}</option>
+            {%endfor%}
+          </select>
         </div>
-        <button
-          type="submit"
-          value="Submit"
-          class="ml-8 text-light text-xl bg-dark hover:bg-grey-300 py-3 px-5 rounded-xl my-auto"
-        >
-          Apply filters
-        </button>
+        <div class="flex flex-col">
+          <button
+            type="submit"
+            value="Submit"
+            class="ml-8 text-light text-xl bg-dark hover:bg-grey-300 py-3 px-5 rounded-xl my-auto"
+          >
+            Apply filters
+          </button>
+          <button
+            id="more_filters_button"
+            type="button"
+            onclick="displayMoreFilters()"
+            class="ml-8 text-light text-xl bg-dark hover:bg-grey-300 py-3 px-5 rounded-xl my-auto"
+          >
+            More filters
+          </button>
+        </div>
       </div>
     </div>
 
@@ -106,12 +223,15 @@
           <div class="text-lg text-dark font-semibold text-dark mt-1">
             Source: {{component.source}}
           </div>
+          <div class="text-lg text-dark font-semibold text-dark mt-1">
+            Clicks: {{component.clicks}}
+          </div>
         </a>
         {% endfor %}
       </div>
     </div>
     {% else %}
-    <div class="w-full h-full bg-grey flex justify-center pt-20 text-3xl font-bold">
+    <div class="w-full h-full bg-grey flex justify-center py-20 text-3xl font-bold">
       No components found for these search parameters
     </div>
     {% endif %}
@@ -131,6 +251,16 @@ const updateClick = async (url, componentId) => {
     }
   });
   const responseBody = await response.json();
+}
+
+function displayMoreFilters() {
+  second_section = document.getElementById('second_filter');
+  second_section.classList.remove('hidden-filter');
+  third_section = document.getElementById('third_filter');
+  third_section.classList.remove('hidden-filter');
+
+  button = document.getElementById('more_filters_button');
+  button.classList.add('hidden');
 }
 
 </script>

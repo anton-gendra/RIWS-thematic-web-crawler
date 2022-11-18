@@ -148,7 +148,10 @@ CRISPY_ALLOWED_TEMPLATE_PACKS = "tailwind"
 CRISPY_TEMPLATE_PACK = "tailwind"
 
 COMPONENT_CAREGORIES = [
-    'Graphics-Card', 'Laptop', 'Monitor', 'Desktops', 'PC-Peripherals',
-    'Keyboard', 'Mouse', 'Headset', 'PC-Components', 'PC-Case', 'Power-Supply',
-    'CPU-Cooler', 'SSD', 'Memory', 'DIY-KIT'
+    "motherboard", "processor", "RAM", "SSD", "HDD", "RAM",
+    "graphic-card", "net-card", "sound-card", "fan", "power-source", "tower"
+]
+
+COMPONENT_SOURCES = [
+    'Coolmod', 'Neobyte', 'PcBox', 'PcMontajes'
 ]

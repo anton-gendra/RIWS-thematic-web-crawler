@@ -2,7 +2,7 @@ from django.http import HttpResponse
 from django.shortcuts import render
 from .forms import FilterForm
 from component_search.elastic.ESController import ESController
-from crawler_riws.settings import COMPONENT_CAREGORIES
+from crawler_riws.settings import COMPONENT_CAREGORIES, COMPONENT_SOURCES
 from component_search.scripts.web_scraping.web_scraping.spiders.utils.utils import BRANDS
 from django.core.exceptions import ObjectDoesNotExist
 from component_search.scripts.web_scraping.web_scraping.items import Component
@@ -26,13 +26,53 @@ def filter(request):
     min_price = None
     max_price = None
     brand = None
+    socket  = None
+    storing_capacity = None
+    power = None
+    max_temperature = None
+    speed = None
+    weight = None
+    height = None
+    width = None
 
     if request.GET:
         name = request.GET.get('name')
+        name = name if name else None
         category = request.GET.get('category')
         min_price = request.GET.get('min_price')
         max_price = request.GET.get('max_price')
+        orq = []
         brand = request.GET.getlist('brand')
+        if brand and brand[0]:
+            orq.append({"key": "brand", "values": brand})
+        source = request.GET.getlist('source')
+        if source and source[0]:
+            orq.append({"key": "source", "values": source})
+        andq = []
+        socket  = request.GET.get('socket')
+        if socket:
+            andq.append({"key": "socket", "value": socket})
+        storing_capacity = request.GET.get('storing_capacity')
+        if storing_capacity:
+            andq.append({"key": "storing_capacity", "value": storing_capacity})
+        power = request.GET.get('power')
+        if power:
+            andq.append({"key": "power", "value": power})
+        max_temperature = request.GET.get('max_temperature')
+        if max_temperature:
+            andq.append({"key": "max_temperature", "value": max_temperature})
+        speed = request.GET.get('speed')
+        if speed:
+            andq.append({"key": "speed", "value": speed})
+        weight = request.GET.get('weight')
+        if weight:
+            andq.append({"key": "weight", "value": weight})
+        height = request.GET.get('height')
+        if height:
+            andq.append({"key": "height", "value": height})
+        width = request.GET.get('width')
+        if width:
+            andq.append({"key": "width", "value": width})
 
         args = {
                 "name": name,
@@ -41,8 +81,8 @@ def filter(request):
                     "min": min_price,
                     "max": max_price
                 }, 
-                "orQ": [],
-                "andQ": []
+                "orQ": orq,
+                "andQ": andq
             }
         elastic_search_data = es.search(args)
 
@@ -52,6 +92,7 @@ def filter(request):
         data_source = data['_source']
         data_source_characteristics = data['_source']['characteristics']
         components.append(Component(
+            id=data_source['id'],
             name=data_source['name'], 
             price=data_source['price'], 
             brand=data_source['brand'], 
@@ -91,12 +132,22 @@ def filter(request):
 
     context = {
         'components_categories': COMPONENT_CAREGORIES,
+        'component_sources': COMPONENT_SOURCES,
         'brands': BRANDS,
         'name': name,
         'category': category,
         'min_price': min_price,
         'max_price': max_price,
         'brand': brand,
+        'socket': socket,
+        'storing_capacity': storing_capacity,
+        'power': power,
+        'max_temperature': max_temperature,
+        'speed': speed,
+        'weight': weight,
+        'height': height,
+        'width': width,
+        'source': source,
         'components': components
     }
 
