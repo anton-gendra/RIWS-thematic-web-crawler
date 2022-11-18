@@ -5,6 +5,8 @@ from scrapy.linkextractors import LinkExtractor
 from web_scraping.items import Component
 from crawler_riws.component_search.scripts.web_scraping.web_scraping.spiders.utils.utils import match_brand
 
+import re
+
 
 CATEGORIES = {
     "componentes-pc-procesadores": "processor",
@@ -58,35 +60,35 @@ class CoolmodSpider(CrawlSpider):
     def _parse_characteristic(self, name, value, component):
         if 'dimen' in name.lower():
             dimensions = value.lower().split('x')
-            component['height'] = dimensions[2]
-            component['width'] = dimensions[1]
+            component['height'] = float(re.sub('[áéíóúa-z:()]', '', dimensions[2].lower()))
+            component['width'] = float(re.sub('[áéíóúa-z:()]', '', dimensions[1].lower()))
 
         elif 'potencia' in name.lower():
-            component['power'] = value.lower().split('w')[0]
+            component['power'] = int(re.sub('[áéíóúa-z:()]', '', value.lower()))
 
         elif 'interfa' in name.lower():
             component['socket'] = value
 
         elif 'storage' in name.lower() or 'capacidad' in name.lower():
-            component['storing_capacity'] = value
+            component['storing_capacity'] = int(re.sub('[áéíóúa-z:()]', '', value.lower()))
 
         elif 'peso' in name.lower() or 'weig' in name.lower():
-            component['weight'] = value
+            component['weight'] = float(re.sub('[áéíóúa-z:()]', '', value.lower()))
 
         elif 'frequ' in name.lower() or 'frecuen' in name.lower() or 'reloj' in name.lower():
-            component['speed'] = value
+            component['speed'] = float(re.sub('[áéíóúa-z:()]', '', value.lower()))
 
         elif 'anchu' in name.lower():
-            component['width'] = value
+            component['width'] = float(re.sub('[áéíóúa-z:()]', '', value.lower()))
 
         elif 'altur' in name.lower():
-            component['height'] = value
+            component['height'] = float(re.sub('[áéíóúa-z:()]', '', value.lower()))
 
         elif 'socket' in name.lower():
             component['socket'] = value
 
         elif 'temp' in name.lower():
-            component['max_temperature'] = value
+            component['max_temperature'] = int(re.sub('[áéíóúºªa-z:()]', '', value.lower()))
 
         elif 'núcle' in name.lower():
             component['cores'] = value
@@ -95,7 +97,7 @@ class CoolmodSpider(CrawlSpider):
             component['threads'] = value
 
         elif 'caché' in name.lower():
-            component['storing_capacity'] = value
+            component['storing_capacity'] = int(re.sub('[áéíóúa-z:()]', '', value.lower()))
 
         elif 'tipo de memoria' in name.lower() or 'tipo de dispositivo' in name.lower():
             component['type'] = value
