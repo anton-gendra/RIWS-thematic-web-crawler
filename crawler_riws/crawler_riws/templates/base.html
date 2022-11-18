@@ -41,21 +41,19 @@
     </script>
   </head>
 
-  <body>
-    <div id="content-block" class="h-full w-full bg-grey">
+  <body class="bg-grey">
+    <div class="w-full flex flex-col bg-grey">
       {% block content %}
       <p>Content not yet implemented.</p>
       {% endblock content %}
-      <!-- FOOTER -->
-      <footer class="absolute inset-x-0 bottom-0">
-        <div class="bg-dark h-14">
-          <div class="flex flex-col px-12 py-2">
-            <div class="flex justify-center text-light text-xl font-semibold">
-              RIWS, UDC &#169;
-            </div>
-          </div>
-        </div>
-      </footer>
     </div>
   </body>
+  <!-- FOOTER -->
+  <footer
+    class="inset-x-0 bottom-0 sticky w-full bg-dark h-18 flex flex-col px-12 py-2"
+  >
+    <div class="flex justify-center text-light text-xl font-semibold">
+      RIWS, UDC &#169;
+    </div>
+  </footer>
 </html>
