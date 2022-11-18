@@ -32,6 +32,7 @@ class Component(scrapy.Item):
     cores = scrapy.Field()
     threads = scrapy.Field()
     type = scrapy.Field()
+    clicks = scrapy.Field()
     
     def __getitem__(self, key):
         try:

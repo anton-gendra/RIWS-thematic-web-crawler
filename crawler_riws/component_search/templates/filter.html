@@ -1,9 +1,9 @@
 {% extends 'base.html' %} {% block content %} {% load static %}
 
-<form method="get" action="filter.html">
+<form class="flex-grow h-screen" method="get" action="filter.html">
   <div class="bg-grey">
     <div class="w-full flex flex-row bg-color shadow-md shadow-dark mb-2">
-      <a id="logo" href="index.html">
+      <a id="logo" class="my-auto" href="index.html">
         <img
           src="{% static 'assets/lapTOP_logo.png' %}"
           alt="My image"
@@ -54,11 +54,11 @@
           <select
             name="brand"
             multiple="multiple"
-            class="text-light focus:outline-0 bg-transparent p-2 pb-1 w-full text-xl border-b-2 border-light"
+            class="text-light focus:outline-0 bg-transparent p-2 my-3 h-4/6 pb-1 w-full text-xl border-b-2 border-light"
           >
-            <option class="text-dark" value="All">All brands</option>
+            <option value="All">All brands</option>
             {% for component_brand in brands %}
-            <option class="text-dark" value="{{component_brand}}"
+            <option value="{{component_brand}}"
             {% if component_brand == brand %} selected {% endif %}>
               {{component_brand}}</option>
             {%endfor%}
