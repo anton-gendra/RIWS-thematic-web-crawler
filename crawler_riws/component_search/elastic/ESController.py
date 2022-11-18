@@ -5,6 +5,7 @@ import os, sys
 
 from crawler_riws.settings import INDICES # Here we can access indices names
 
+MAX_PRICE = 1000000000
 
 idx = {
     "settings": {
@@ -77,13 +78,13 @@ idx = {
                         "type": "integer"
                     },
                     "socket": {
-                        "type": "keyword"
+                        "type": "text"
                     },
                     "interface": {
-                        "type": "keyword"
+                        "type": "text"
                     },
                     "architecture": {
-                        "type": "keyword"
+                        "type": "text"
                     },
                     "cores": {
                         "type": "keyword"
@@ -92,7 +93,7 @@ idx = {
                         "type": "keyword"
                     },
                     "type": {
-                        "type": "keyword"
+                        "type": "text"
                     }
                 }
             }
@@ -204,6 +205,7 @@ class ESController:
             }
         return caract
 
+
     def create_query_or(self, orQ):
         listOr = []
         for q in orQ:
@@ -220,19 +222,21 @@ class ESController:
         return listOr 
     
     def create_query_price(self, priceQ):
-        if priceQ['min'] == None:
+        if not priceQ['min']:
             priceQ['min'] = 0
             
-        if priceQ['max'] == None:
-            priceQ['max'] == sys.float_info.max
+        if not priceQ['max']:
+            priceQ['max'] = MAX_PRICE
         
         return  {"range": {"price" : {"gte": priceQ['min'], "lte": priceQ['max']}}}
     
+
     def search(self, data):
         args = []
         list(map(lambda q: args.append(q), self.create_query_or(data['orQ']))) 
         args.append(self.create_query_price(data["price"]))
-        args.append(self.create_query_and(data['andQ']))
+        if data['andQ']:
+            args.append(self.create_query_and(data['andQ']))
         
         query = {
             "bool": {
@@ -244,7 +248,7 @@ class ESController:
             
         if data['name'] != None:
             query["bool"]["must"].append(
-                {"match" : { "name" : data['name'] }}
+                {"bool": {"must": {"match" : { "name" : data['name'] }}}}
             )
             
         print(query)

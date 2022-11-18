@@ -32,7 +32,7 @@ def filter(request):
         category = request.GET.get('category')
         min_price = request.GET.get('min_price')
         max_price = request.GET.get('max_price')
-        brand = request.GET.get('brand')
+        brand = request.GET.getlist('brand')
 
         args = {
                 "name": name,
@@ -51,7 +51,32 @@ def filter(request):
     for data in elastic_search_data:
         data_source = data['_source']
         data_source_characteristics = data['_source']['characteristics']
-        components.append(Component(name=data_source['name'], price=data_source['price'], brand=data_source['brand'], source=data_source['source'], link=data_source['link'], category=data_source['category'], image=data_source['image'], storing_capacity=data_source_characteristics['storing_capacity'], height=data_source_characteristics['height'], width=data_source_characteristics['width'], weight=data_source_characteristics['weight'], power=data_source_characteristics['power'], speed=data_source_characteristics['speed'], latency=data_source_characteristics['latency'], max_temperature=data_source_characteristics['max_temperature'], year=data_source_characteristics['year'], generation=data_source_characteristics['generation'], rating=data_source_characteristics['rating'], socket=data_source_characteristics['socket'], interface=data_source_characteristics['interface'], architecture=data_source_characteristics['architecture'], cores=data_source_characteristics['cores'], threads=data_source_characteristics['threads'], type=data_source_characteristics['type']))
+        components.append(Component(
+            name=data_source['name'], 
+            price=data_source['price'], 
+            brand=data_source['brand'], 
+            source=data_source['source'], 
+            link=data_source['link'], 
+            category=data_source['category'], 
+            image=data_source['image'], 
+            storing_capacity=data_source_characteristics['storing_capacity'], 
+            height=data_source_characteristics['height'], 
+            width=data_source_characteristics['width'], 
+            weight=data_source_characteristics['weight'], 
+            power=data_source_characteristics['power'], 
+            speed=data_source_characteristics['speed'], 
+            latency=data_source_characteristics['latency'], 
+            max_temperature=data_source_characteristics['max_temperature'], 
+            year=data_source_characteristics['year'], 
+            generation=data_source_characteristics['generation'], 
+            rating=data_source_characteristics['rating'], 
+            socket=data_source_characteristics['socket'], 
+            interface=data_source_characteristics['interface'], 
+            architecture=data_source_characteristics['architecture'], 
+            cores=data_source_characteristics['cores'], 
+            threads=data_source_characteristics['threads'], 
+            type=data_source_characteristics['type']
+        ))
 
     for component in components:
         try:
