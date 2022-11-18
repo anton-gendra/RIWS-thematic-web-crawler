@@ -34,22 +34,24 @@ def filter(request):
         max_price = request.GET.get('max_price')
         brand = request.GET.get('brand')
 
-    args = {
-        "name": name,
-        "category" : category,
-        "price": {
-            "min": min_price,
-            "max": max_price
-        }, 
-        "orQ": [{"key": "brand", "values": [brand]}],
-        "andQ": []
-    }
+        args = {
+                "name": name,
+                "category" : category,
+                "price": {
+                    "min": min_price,
+                    "max": max_price
+                }, 
+                "orQ": [],
+                "andQ": []
+            }
+        elastic_search_data = es.search(args)
 
-    elastic_search_data = es.search(args)
     components = []
 
     for data in elastic_search_data:
-        components.append(Component(name=data._source.name, price=data._source.price, brand=data._source.brand, source=data._source.source, link=data._source.link, category=data._source.category, image=data._source.image, storing_capacity=data._source.characteristics.storing_capacity, height=data._source.characteristics.height, width=data._source.characteristics.width, wheight=data._source.characteristics.wheight, power=data._source.characteristics.power, speed=data._source.characteristics.speed, latency=data._source.characteristics.latency, max_temperature=data._source.characteristics.max_temperature, year=data._source.characteristics.year, generation=data._source.characteristics.generation, rating=data._source.characteristics.rating, socket=data._source.characteristics.socket, interface=data._source.characteristics.interface, architecture=data._source.characteristics.architecture, cores=data._source.characteristics.cores, threads=data._source.characteristics.threads, type=data._source.characteristics.type))
+        data_source = data['_source']
+        data_source_characteristics = data['_source']['characteristics']
+        components.append(Component(name=data_source['name'], price=data_source['price'], brand=data_source['brand'], source=data_source['source'], link=data_source['link'], category=data_source['category'], image=data_source['image'], storing_capacity=data_source_characteristics['storing_capacity'], height=data_source_characteristics['height'], width=data_source_characteristics['width'], weight=data_source_characteristics['weight'], power=data_source_characteristics['power'], speed=data_source_characteristics['speed'], latency=data_source_characteristics['latency'], max_temperature=data_source_characteristics['max_temperature'], year=data_source_characteristics['year'], generation=data_source_characteristics['generation'], rating=data_source_characteristics['rating'], socket=data_source_characteristics['socket'], interface=data_source_characteristics['interface'], architecture=data_source_characteristics['architecture'], cores=data_source_characteristics['cores'], threads=data_source_characteristics['threads'], type=data_source_characteristics['type']))
 
     for component in components:
         try:

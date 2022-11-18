@@ -54,7 +54,7 @@ class WebScrapingPipeline(object):
                 "rating": item["rating"],
                 "socket": item["socket"],
                 "interface": item["interface"],
-                "achitecture": item["achitecture"],
+                "architecture": item["architecture"],
                 "cores": item["cores"],
                 "threads": item["threads"],
                 "type": item["type"]

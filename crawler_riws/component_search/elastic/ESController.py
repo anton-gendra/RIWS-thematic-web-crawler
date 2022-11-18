@@ -82,7 +82,7 @@ idx = {
                     "interface": {
                         "type": "keyword"
                     },
-                    "achitecture": {
+                    "architecture": {
                         "type": "keyword"
                     },
                     "cores": {
@@ -316,7 +316,6 @@ if __name__ == '__main__':
             "year": 2022
         }
     }
-
     
     args = {
         "name": "PROCESADOR AMD RYZEN 5 5600G 3.9GHZ SKT AM4 65W",
