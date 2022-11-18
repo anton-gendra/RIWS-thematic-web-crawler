@@ -8,12 +8,32 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link rel="stylesheet" href="../static/style.css" />
     <script src="https://cdn.tailwindcss.com"></script>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
+    />
     <script>
       tailwind.config = {
         theme: {
           extend: {
             colors: {
-              clifford: "#da373d",
+              dark: "#212121",
+              color: "#497174",
+              accent: "#EB6440",
+              grey: "#D6E4E5",
+              light: "#EFF5F5",
+              white: "#ffffff",
+              gray: {
+                100: "#f3f4f6",
+                200: "#e5e7eb",
+                300: "#d1d5db",
+                400: "#9ca3af",
+                500: "#6b7280",
+                600: "#4b5563",
+                700: "#374151",
+                800: "#1f2937",
+                900: "#111827",
+              },
             },
           },
         },
@@ -22,23 +42,16 @@
   </head>
 
   <body>
-    <div class="w-full h-full flex flex-col bg-teal-200">
-      <div>
-        <h1 class="flex w-full text-4xl font-bold">Component search engine</h1>
-      </div>
-
-      <div id="content-block">
-        {% block content %}
-            <p>Content not yet implemented.</p>
-        {% endblock content %}
-      </div>
-
-      <!-- FOOTER DE LOS COJONES DEL JUAN -->
-      <footer>
-        <div class="bg-slate-200 border">
-          <div class="flex flex-col justify-items-center px-12 py-2">
-            <div class="text-md font-semibold">
-              Juan Justo Armesto agarrame de esto
+    <div id="content-block" class="h-full w-full bg-grey">
+      {% block content %}
+      <p>Content not yet implemented.</p>
+      {% endblock content %}
+      <!-- FOOTER -->
+      <footer class="absolute inset-x-0 bottom-0">
+        <div class="bg-dark h-14">
+          <div class="flex flex-col px-12 py-2">
+            <div class="flex justify-center text-light text-xl font-semibold">
+              RIWS, UDC &#169;
             </div>
           </div>
         </div>

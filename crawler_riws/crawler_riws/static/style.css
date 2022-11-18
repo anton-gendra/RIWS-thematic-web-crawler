@@ -12,3 +12,14 @@ header {
     color: var(--text);
     background-color: var(--primary);
 }
+
+#logo{
+    height: 6.5rem !important;
+    margin-left: 1.5rem !important;
+    margin-right: 1.5rem !important;
+}
+
+input::placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */
+    color: #F6F6F6 !important;
+    opacity: 1; /* Firefox */
+  }

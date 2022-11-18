@@ -1,0 +1,138 @@
+{% extends 'base.html' %} {% block content %} {% load static %}
+
+<form method="get" action="filter.html">
+  <div class="bg-grey">
+    <div class="w-full flex flex-row bg-color shadow-md shadow-dark mb-2">
+      <a id="logo" href="index.html">
+        <img
+          src="{% static 'assets/lapTOP_logo.png' %}"
+          alt="My image"
+          class="h-full"
+        />
+      </a>
+      <div class="flex w-full justify-center flex-row">
+        <div class="flex items-center pr-2 gap-8">
+          <input
+            name="name"
+            {% if name %}
+            value={{ name }}
+            {% endif %}
+            class="text-light focus:outline-0 bg-transparent p-2 pb-1 w-full text-xl border-b-2 border-light"
+            placeholder="Name"
+          />
+          <input
+            name="min_price"
+            {% if min_price %}
+            value={{ min_price }}
+            {% endif %}
+            type="number"
+            min="0"
+            class="text-light focus:outline-0 bg-transparent p-2 pb-1 w-full text-xl border-b-2 border-light"
+            placeholder="Min. Price"
+          />
+          <input
+            name="max_price"
+            {% if max_price %}
+            value={{ max_price }}
+            {% endif %}
+            type="number"
+            min="1"
+            class="text-light focus:outline-0 bg-transparent p-2 pb-1 w-full text-xl border-b-2 border-light"
+            placeholder="Max. Price"
+          />
+          <select
+            name="category"
+            class="text-light focus:outline-0 bg-transparent p-2 pb-1 w-full text-xl border-b-2 border-light"
+          >
+            <option class="text-dark" value="All">All categories</option>
+            {% for component_category in components_categories %}
+            <option class="text-dark" value="{{component_category}}"
+            {% if component_category == category %} selected {% endif %}>
+              {{component_category}}</option>
+            {%endfor%}
+          </select>
+          <select
+            name="brand"
+            multiple="multiple"
+            class="text-light focus:outline-0 bg-transparent p-2 pb-1 w-full text-xl border-b-2 border-light"
+          >
+            <option class="text-dark" value="All">All brands</option>
+            {% for component_brand in brands %}
+            <option class="text-dark" value="{{component_brand}}"
+            {% if component_brand == brand %} selected {% endif %}>
+              {{component_brand}}</option>
+            {%endfor%}
+          </select>
+        </div>
+        <button
+          type="submit"
+          value="Submit"
+          class="ml-8 text-light text-xl bg-dark hover:bg-grey-300 py-3 px-5 rounded-xl my-auto"
+        >
+          Apply filters
+        </button>
+      </div>
+    </div>
+
+    {% if components %}
+    <div class="w-full h-fit bg-grey px-20 gap-8">
+      <div class="grid grid-cols-4 px-16 py-8 gap-10 h-full">
+        {% for component in components %}
+        <a
+          class="flex flex-col rounded-xl h-fit bg-light hover:bg-gray-200 justify-center content-self-center cursor-pointer shadow-md shadow-dark p-6"
+          href="{{component.link}}"
+          onclick="updateClick('{% url 'update_click' %}', '{{ component.id }}')"
+        >
+          <div class="py-6 max-h-60 h-60">
+            {% if component.image %}
+            <img class="mx-auto my-auto h-full" src="{{component.image}}" />
+            {% else %}
+            <div
+              class="flex items-center justify-center bg-gray-300 border-2 border-gray-500/50 rounded-2xl h-full w-full my-auto"
+            >
+              <div class="text-dark font-semibold text-lg">Image not found</div>
+            </div>
+            {% endif %}
+          </div>
+          <div class="text-3xl font-bold text-dark">
+            {{component.name}}
+          </div>
+          <div class="text-4xl text-accent font-bold text-dark mt-2">
+            {{component.price}} €
+          </div>
+          <div class="text-lg text-dark font-semibold text-dar mt-1">
+            {{component.brand}}
+          </div>
+          <div class="text-lg text-dark font-semibold text-dark mt-1">
+            Source: {{component.source}}
+          </div>
+        </a>
+        {% endfor %}
+      </div>
+    </div>
+    {% else %}
+    <div class="w-full h-full bg-grey flex justify-center pt-20 text-3xl font-bold">
+      No components found for these search parameters
+    </div>
+    {% endif %}
+  </div>
+</form>
+
+
+
+<script>
+
+const updateClick = async (url, componentId) => {
+  const response = await fetch(url, {
+    method: 'POST',
+    body: componentId,
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  });
+  const responseBody = await response.json();
+}
+
+</script>
+
+{% endblock content %}

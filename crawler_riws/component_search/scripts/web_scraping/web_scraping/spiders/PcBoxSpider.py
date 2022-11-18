@@ -133,6 +133,13 @@ class PcBoxSpider(CrawlSpider):
 
     def parse_list(self, response):
         components = response.css("div.vtex-search-result-3-x-galleryItem")
+        link_page = response.css("div.vtex-search-result-3-x-buttonShowMore")
+         
+        if len(link_page) > 1:
+            link_next_page = link_page[1].css("a ::attr(href)").get()
+            resp=  response.follow(link_next_page, callback=self.parse_list)
+            yield resp
+        
         for component in components:
             category = None
             name = component.css("span.vtex-product-summary-2-x-brandName ::text").get()

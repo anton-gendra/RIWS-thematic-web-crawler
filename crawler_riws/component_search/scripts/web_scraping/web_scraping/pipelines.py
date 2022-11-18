@@ -17,10 +17,7 @@ class WebScrapingPipeline(object):
         self.index = ESController()
         self.index.create_index(INDICES['component'], idx)
     
-    def process_item(self, item, spider):    
-        # if not isinstance(item, Component):
-        #     raise DropItem(f"Incorrect element{item}")
-        
+    def process_item(self, item, spider):            
         if not item['category'] or not item['source'] or not item['brand']:
             raise DropItem(f"Incorrect data item {item}")
         
@@ -37,6 +34,7 @@ class WebScrapingPipeline(object):
             "price": item["price"],
             "brand": item["brand"],
             "source": item["source"],
+            "image": item["image"],
             "link": item["link"],
             "category": item["category"],
             "characteristics": {
@@ -53,12 +51,9 @@ class WebScrapingPipeline(object):
                 "rating": item["rating"],
                 "socket": item["socket"],
                 "interface": item["interface"],
-                "achitecture": item["achitecture"],
+                "architecture": item["architecture"],
                 "cores": item["cores"],
                 "threads": item["threads"],
                 "type": item["type"]
             }
         }
-        
-    #def close_spider(self, spider):
-        #cerrar indice de elastic

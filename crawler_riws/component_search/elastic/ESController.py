@@ -1,12 +1,12 @@
 from typing import Any, Dict, Tuple
 from elasticsearch import Elasticsearch, BadRequestError
 import requests
-import os
+import os, sys
 
 from crawler_riws.crawler_riws.settings import INDICES # Here we can access indices names
 
-# TODO: Remove
-# Hago este sólo de ejemplo, luego vemos cómo hacemos
+MAX_PRICE = 1000000000
+
 idx = {
     "settings": {
         "number_of_shards": 1,
@@ -41,7 +41,9 @@ idx = {
                 "index": False
             },
             "characteristics": {
+                "type": "nested", 
                 "properties": {
+                    "type": "nested", 
                     "storing_capacity": { # Gigabytes, RAM or persistent or w/e
                         "type": "integer"
                     },
@@ -76,13 +78,13 @@ idx = {
                         "type": "integer"
                     },
                     "socket": {
-                        "type": "keyword"
+                        "type": "text"
                     },
                     "interface": {
-                        "type": "keyword"
+                        "type": "text"
                     },
-                    "achitecture": {
-                        "type": "keyword"
+                    "architecture": {
+                        "type": "text"
                     },
                     "cores": {
                         "type": "keyword"
@@ -91,7 +93,7 @@ idx = {
                         "type": "keyword"
                     },
                     "type": {
-                        "type": "keyword"
+                        "type": "text"
                     }
                 }
             }
@@ -129,10 +131,10 @@ class ESController:
                 "name": name
             }
         }
-        source = ["id", "name", "price", "brand", "characteristics"]
+        source = ["id", "name", "price", "brand", "characteristics", "image"]
         result = self.es.search(query=query, size=10, index=INDICES['component'], 
             _source=source)
-        return result
+        return [component['_source'] for component in result['hits']['hits']]
 
     def insert_component(self, index_name: str, data: Dict[str, Any]):
         data['id'] = f"{data['name']}-{data['source']}"
@@ -147,67 +149,102 @@ class ESController:
         result = self.es.index(index=index_name, document=data)
         return result
 
-    def get_component_by_price(self, data: Dict[str, Any]):
-
-        query = {
-            "bool": {
-                "must": {
-                    "term" : {"category": data['category']}
-                },
-                "filter" : {
-                    "range": {
-                        "price" : {"gte": data['min'], "lte": data['max']}
+    def create_query_and(self, andQ):
+        listAnd = []
+        for q in andQ:
+            listAnd.append(
+                { "match": { "characteristics." + q['key']: q['value'] } }
+            )
+            
+        caract = {"nested": {
+                    "path": "characteristics",
+                    "query": {
+                        "bool": {
+                            "must": listAnd
+                        } 
                     }
                 }
             }
-        }
-        source = ["id", "name", "price", "brand", "characteristics"]
-        result = self.es.search(query=query, size=20, index=INDICES['component'], _source=source)
-        return result
+        return caract
 
+    def create_query_or(self, orQ):
+        listOr = []
+        for q in orQ:
+            values= []
+            for value in q['values']:
+                values.append({ "term": { q['key']: value } })
+                
+            listOr.append({
+                "bool": {
+                    "should": values
+                }
+            })
+            
+        return listOr 
+    
+    def create_query_price(self, priceQ):
+        if not priceQ['min']:
+            priceQ['min'] = 0
+            
+        if not priceQ['max']:
+            priceQ['max'] = MAX_PRICE
+        
+        return  {"range": {"price" : {"gte": priceQ['min'], "lte": priceQ['max']}}}
+    
+    def search(self, data):
+        args = []
+        list(map(lambda q: args.append(q), self.create_query_or(data['orQ']))) 
+        args.append(self.create_query_price(data["price"]))
+        if data['andQ']:
+            args.append(self.create_query_and(data['andQ']))
+        
+        query = {
+            "bool": {
+                "must": args
+            }
+        }
+        if data['category'] != None:
+            query["bool"]["filter"] = { "term": {"category": data['category']}}
+            
+        if data['name'] != None:
+            query["bool"]["must"].append(
+                {"bool": {"must": {"match" : { "name" : data['name'] }}}}
+            )
+            
+        print(query)
+        print("\n")
+        #source = ["id", "name", "price", "brand", "source", "category", "characteristics"]
+        result = self.es.search(query=query, size=100, index=INDICES['component'], _source=True)
+        return result['hits']['hits']
+    
+    
 
-if __name__ == '__main__':
-    elastic = ESController()
-    print(f"Elasticsearch server status: {elastic.get_es_status()}")
-    # print(elastic.create_index("test_index", idx))
-    # print(elastic.get_index_status("test_index"))
-    print(f"Creating new index '{INDICES['component']}': {elastic.create_index(INDICES['component'], idx)}")
-    print(f"Index status: {elastic.get_index_status(INDICES['component'])}")
-    component_1 = {
-        "name": "Cisco SSD 2349k",
-        "price": 3.14,
-        "brand": "Kingstone",
-        "source": "Gigabyte",
-        "category": "almacenamiento",
-        "characteristics": {
-            "storing_capacity": 5000
-        }
-    }
-    component_2 = {
-        "name": "Nicolas Motherboard 2349k",
-        "price": 89.67,
-        "brand": "Gigabyte",
-        "source": "Gigabyte",
-        "category": "almacenamiento",
-        "characteristics": {
-            "socket": "LG234"
-        }
-    }
-    component_3 = {
-        "name": "Arthur Processor 8300N",
-        "price": 149.43,
-        "brand": "Asus",
-        "source": "Gigabyte",
-        "category": "almacenamineto",
-        "characteristics": {
-            "socket": "LG234",
-            "speed": 1000
-        }
-    }
+# if __name__ == '__main__':
+#     elastic = ESController()
+#     #print(f"Elasticsearch server status: {elastic.get_es_status()}")
+#     # print(elastic.create_index("test_index", idx))
+#     # print(elastic.get_index_status("test_index"))
+#     #print(f"Creating new index '{INDICES['component']}': {elastic.create_index(INDICES['component'], idx)}")
+#     #print(f"Index status: {elastic.get_index_status(INDICES['component'])}")
+    
+#     args = {
+#         "name": "PROCESADOR AMD RYZEN 5 5600G 3.9GHZ SKT AM4 65W",
+#         "category" : "processor",
+#         "price": {
+#             "min": 5,
+#             "max": 2000
+#         }, 
+#         "orQ": [],
+#         "andQ": []
+#     }
+    
+#     {"key": "brand", "values": ["AMD", "INTEL", "Asus"]}, {"key": "source", "values": ["PcBox", "Gigabyte", "Gigabyte2"]}
+#     {"key": "socket", "value": "LG234"}, {"key": "year", "value": 2022}
+    
+#     #print(f"Inserting component 1: {elastic.insert_component(INDICES['component'], component_1)}")
+#     #print(f"Inserting component 2: {elastic.insert_component(INDICES['component'], component_2)}")
+#     #print(f"Inserting component 3: {elastic.insert_component(INDICES['component'], component_3)}")
+#     #print(f"Inserting component 4: {elastic.insert_component(INDICES['component'], component_4)}")
 
-    dq = {"category" : "almacenamiento", "min" : 5, "max": 100}
-    print(f"Inserting component 1: {elastic.insert_component(INDICES['component'], component_1)}")
-    print(f"Inserting component 2: {elastic.insert_component(INDICES['component'], component_2)}")
-    print(f"Inserting component 3: {elastic.insert_component(INDICES['component'], component_3)}")
-    print(f"Searching 'SSD' term: {elastic.get_component_by_name('SSD')}")
-    print(f"Searching 'SSD' term: {elastic.get_component_by_price(dq)}")
+#     print(f"Searching general query: {elastic.search(args)}")
+    
