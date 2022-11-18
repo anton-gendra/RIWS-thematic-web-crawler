@@ -3,7 +3,7 @@ from elasticsearch import Elasticsearch, BadRequestError
 import requests
 import os, sys
 
-from crawler_riws.settings import INDICES # Here we can access indices names
+from crawler_riws.crawler_riws.settings import INDICES # Here we can access indices names
 
 MAX_PRICE = 1000000000
 
@@ -149,44 +149,6 @@ class ESController:
         result = self.es.index(index=index_name, document=data)
         return result
 
-    def get_component_by_price(self, data: Dict[str, Any]):
-        
-        query = {
-                "bool": {
-                    "filter": [
-                        { "term": {"category": data['category']}}
-                    ],
-                    "must": [
-                        { "bool": {
-                                "should": [
-                                { "term": {"brand": "Kingstone"}},
-                                { "term": {"brand": "Gigabyte"}}]
-                            }
-                        },
-                        {"range": {
-                                "price" : {"gte": data['min'], "lte": data['max']}
-                            }
-                        },
-                        {
-                        "nested": {
-                            "path": "characteristics",
-                            "query": {
-                                "bool": {
-                                    "must": [
-                                        { "match": { "characteristics.socket": "LG234" } },
-                                        { "match": { "characteristics.storing_capacity": 5000 } }
-                                    ]
-                                } 
-                            }
-                        }
-                        }
-                    ],
-                }
-            }
-        source = ["id", "name", "price", "brand", "source", "link", "image", "characteristics"]
-        result = self.es.search(query=query, size=20, index=INDICES['component'], _source=source)
-        return result
-
     def create_query_and(self, andQ):
         listAnd = []
         for q in andQ:
@@ -204,7 +166,6 @@ class ESController:
                 }
             }
         return caract
-
 
     def create_query_or(self, orQ):
         listOr = []
@@ -230,7 +191,6 @@ class ESController:
         
         return  {"range": {"price" : {"gte": priceQ['min'], "lte": priceQ['max']}}}
     
-
     def search(self, data):
         args = []
         list(map(lambda q: args.append(q), self.create_query_or(data['orQ']))) 
@@ -253,92 +213,38 @@ class ESController:
             
         print(query)
         print("\n")
-        source = ["id", "name", "price", "brand", "source", "category", "characteristics"]
-        result = self.es.search(query=query, size=20, index=INDICES['component'], _source=True)
-        
+        #source = ["id", "name", "price", "brand", "source", "category", "characteristics"]
+        result = self.es.search(query=query, size=100, index=INDICES['component'], _source=True)
         return result['hits']['hits']
     
     
 
-if __name__ == '__main__':
-    elastic = ESController()
-    #print(f"Elasticsearch server status: {elastic.get_es_status()}")
-    # print(elastic.create_index("test_index", idx))
-    # print(elastic.get_index_status("test_index"))
-    #print(f"Creating new index '{INDICES['component']}': {elastic.create_index(INDICES['component'], idx)}")
-    #print(f"Index status: {elastic.get_index_status(INDICES['component'])}")
-    component_1 = {
-        "name": "Cisco SSD 2349k",
-        "price": 30.14,
-        "brand": "Kingstone",
-        "source": "CoolMod",
-        "category": "almacenamiento",
-        "image": "AA",
-        "link": "AA",
-        "characteristics": {
-            "socket": "LG234",
-            "storing_capacity": 5000,
-            "year": 2022
-        }
-    }
-    component_2 = {
-        "name": "Nicolas Motherboard 2349k",
-        "price": 89.67,
-        "brand": "Gigabyte",
-        "source": "Gigabyte",
-        "category": "almacenamiento",
-        "image": "AA",
-        "link": "AA",
-        "characteristics": {
-            "socket": "LG234",
-            "year": 2022
-        }
-    }
-    component_3 = {
-        "name": "Arthur Processor",
-        "price": 139.43,
-        "brand": "Asus",
-        "source": "Gigabyte2",
-        "category": "almacenamiento",
-        "image": "AA",
-        "link": "AA",
-        "characteristics": {
-            "socket": "LG234",
-            "speed": 1000,
-            "year": 2022
-        }
-    }
+# if __name__ == '__main__':
+#     elastic = ESController()
+#     #print(f"Elasticsearch server status: {elastic.get_es_status()}")
+#     # print(elastic.create_index("test_index", idx))
+#     # print(elastic.get_index_status("test_index"))
+#     #print(f"Creating new index '{INDICES['component']}': {elastic.create_index(INDICES['component'], idx)}")
+#     #print(f"Index status: {elastic.get_index_status(INDICES['component'])}")
     
-    component_4 = {
-        "name": "BBBBB 2323",
-        "price": 110.67,
-        "brand": "Gigabyte",
-        "source": "Gigabyte",
-        "category": "almacenamiento",
-        "characteristics": {
-            "socket": "LG234",
-            "year": 2022
-        }
-    }
+#     args = {
+#         "name": "PROCESADOR AMD RYZEN 5 5600G 3.9GHZ SKT AM4 65W",
+#         "category" : "processor",
+#         "price": {
+#             "min": 5,
+#             "max": 2000
+#         }, 
+#         "orQ": [],
+#         "andQ": []
+#     }
     
-    args = {
-        "name": "PROCESADOR AMD RYZEN 5 5600G 3.9GHZ SKT AM4 65W",
-        "category" : "processor",
-        "price": {
-            "min": 5,
-            "max": 2000
-        }, 
-        "orQ": [],
-        "andQ": []
-    }
+#     {"key": "brand", "values": ["AMD", "INTEL", "Asus"]}, {"key": "source", "values": ["PcBox", "Gigabyte", "Gigabyte2"]}
+#     {"key": "socket", "value": "LG234"}, {"key": "year", "value": 2022}
     
-    {"key": "brand", "values": ["AMD", "INTEL", "Asus"]}, {"key": "source", "values": ["PcBox", "Gigabyte", "Gigabyte2"]}
-    {"key": "socket", "value": "LG234"}, {"key": "year", "value": 2022}
-    
-    #print(f"Inserting component 1: {elastic.insert_component(INDICES['component'], component_1)}")
-    #print(f"Inserting component 2: {elastic.insert_component(INDICES['component'], component_2)}")
-    #print(f"Inserting component 3: {elastic.insert_component(INDICES['component'], component_3)}")
-    #print(f"Inserting component 4: {elastic.insert_component(INDICES['component'], component_4)}")
+#     #print(f"Inserting component 1: {elastic.insert_component(INDICES['component'], component_1)}")
+#     #print(f"Inserting component 2: {elastic.insert_component(INDICES['component'], component_2)}")
+#     #print(f"Inserting component 3: {elastic.insert_component(INDICES['component'], component_3)}")
+#     #print(f"Inserting component 4: {elastic.insert_component(INDICES['component'], component_4)}")
 
-    print(f"Searching general query: {elastic.search(args)}")
+#     print(f"Searching general query: {elastic.search(args)}")
     
