@@ -12,6 +12,8 @@ CATEGORIES = {
     "Disipadores para CPU": "fan",
     "Memorias RAM": "RAM",
     "Discos duros internos 3.5": "HDD",
+    "Discos duros ssd": "SSD",
+    "Tarjetas gráficas": "graphic-card",
     "Fuentes de alimentacion": "power-source",
     "Cajas pc": "tower",
 }
@@ -26,6 +28,8 @@ class PcMontajesSpider(CrawlSpider):
             '12-disipadores-para-cpu',
             '329-componentes-memorias',
             '38-componentes-discos-duros-discos-duros-internos-3-5',
+            '63-componentes-discos-duros-discos-duros-ssd',
+            '17-componentes-tarjetas-graficas',
             '33-componentes-fuentes-de-alimentacion',
             '36-componentes-placas-base',
             '47-componentes-cajas-pc',
@@ -48,31 +52,60 @@ class PcMontajesSpider(CrawlSpider):
         for row in rows:
             cells = row.css('td')
             if (cells[0].root.text == 'Peso'):
-                component['weight'] = cells[1].root.text
+                peso = cells[1].root.text.split(' ')[0]
+                component['weight'] = float(peso.replace(',', '.'))
+
 
             elif (cells[0].root.text == 'Altura'):
-                component['height'] = cells[1].root.text
+                altura = cells[1].root.text.split(' ')[0]
+                component['height'] = float(altura.replace(',', '.'))
+
 
             elif (cells[0].root.text == 'Ancho'):
-                component['width'] = cells[1].root.text
+                ancho = cells[1].root.text.split(' ')[0]
+                component['width'] = float(ancho.replace(',', '.'))
 
-            elif ((cells[0].root.text == 'Memoria máxima') or (cells[0].root.text == 'Memoria interna máxima') or ('Memoria máxima' in cells[0].root.text) or (cells[0].root.text == 'Capacidad del HDD') or (cells[0].root.text == 'Memoria interna')):
-                component['storing_capacity'] = cells[1].root.text
 
-            elif ((cells[0].root.text == 'Potencia de diseño térmico (TDP)') or (cells[0].root.text == 'Intervalo de temperatura operativa') or (cells[0].root.text == 'Potencia total') or (cells[0].root.text == 'Voltaje de memoria')):
-                component['power'] = cells[1].root.text
+            elif ((cells[0].root.text == 'Memoria máxima') or (cells[0].root.text == 'Memoria interna máxima') or ('Memoria máxima' in cells[0].root.text) or (cells[0].root.text == 'Capacidad del HDD') or (cells[0].root.text == 'Memoria interna') or (cells[0].root.text == 'SDD, capacidad')):
+                memoria = cells[1].root.text.split(' ')[0]
+                component['storing_capacity'] = float(memoria.replace(',', '.'))
 
-            elif ((cells[0].root.text == 'Frecuencia base del procesador') or (cells[0].root.text == 'WLAN velocidad de transferencia de datos, soportada') or (cells[0].root.text == 'Consumo energético') or (cells[0].root.text == 'Velocidad de rotación del HDD') or (cells[0].root.text == 'Velocidad de memoria del reloj')):
-                component['speed'] = cells[1].root.text
+
+            elif ((cells[0].root.text == 'Potencia de diseño térmico (TDP)') or (cells[0].root.text == 'Potencia total') or (cells[0].root.text == 'Voltaje de memoria') or (cells[0].root.text == 'Suministro de energía al sistema mínimo') or (cells[0].root.text == 'Consumo energético')):
+                power = cells[1].root.text.split(' ')[0]
+                if (len(power) < 4):
+                    power = float(power.replace(',', '.'))
+                else:
+                    power = float(power.split(',')[0].replace(',', '.'))
+                component['power'] = power
+
+
+            elif ((cells[0].root.text == 'Frecuencia base del procesador') or (cells[0].root.text == 'WLAN velocidad de transferencia de datos, soportada') or (cells[0].root.text == 'Velocidad de rotación del HDD') or (cells[0].root.text == 'Velocidad de memoria del reloj') or (cells[0].root.text == 'Velocidad de lectura')):
+                speed = cells[1].root.text.split(' ')[0]
+                component['speed'] = float(speed.replace(',', '.'))
+
 
             elif (cells[0].root.text == 'Frecuencia de entrada AC') or (cells[0].root.text == 'Latencia CAS'):
-                component['latency'] = cells[1].root.text
+                latencia = cells[1].root.text.split(' ')[0]
+                if ('/' in latencia):
+                    latencia = float(latencia.split('/')[0])
+                else:
+                    latencia = float(latencia.replace(',', '.'))
+                component['latency'] = latencia
+
 
             elif (cells[0].root.text == 'Intersección T'):
-                component['max_temperature'] = cells[1].root.text
+                temperature = cells[1].root.text.split(' ')[0]
+                component['max_temperature'] = float(temperature.replace(',', '.'))
+
 
             elif (cells[0].root.text == 'Generación del procesador'):
-                component['generation'] = cells[1].root.text
+                generation = cells[1].root.text.split(' ')
+                for g in generation:
+                    if ('ma' in g):
+                        component['generation'] = g.replace('ma', '')
+                        break
+
 
             elif (cells[0].root.text == 'Socket de procesador'):
                 component['socket'] = cells[1].root.text
@@ -80,7 +113,7 @@ class PcMontajesSpider(CrawlSpider):
             elif ((cells[0].root.text == 'Interfaz') or (cells[0].root.text == 'Tipo de interfaz')):
                 component['interface'] = cells[1].root.text
 
-            elif ((cells[0].root.text == 'Número de núcleos de procesador')):
+            elif ((cells[0].root.text == 'Número de núcleos de procesador') or (cells[0].root.text == 'Núcleos CUDA')):
                 component['cores'] = cells[1].root.text
 
             elif ((cells[0].root.text == 'Número de hilos de ejecución')):
